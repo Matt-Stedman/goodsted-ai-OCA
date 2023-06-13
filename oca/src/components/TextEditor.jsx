@@ -1,27 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const TextEditor = () => {
-    const [blocks, setBlocks] = useState([""]);
+  const [blocks, setBlocks] = useState([""]);
+  const quillRef = useRef();
 
-    const handleChange = (value) => {
-        const lines = value.split("\n");
-        setBlocks(lines);
-        console.log(lines);
-    };
+  const handleChange = (value) => {
+    const formattedValue = value.replace(/<\/?(p|br|div)>/g, "");
+    setBlocks(formattedValue.split("<p>"));
+  };
 
-    return (
-        <div>
-            {blocks.map((block, index) => (
-                <ReactQuill
-                    key={index}
-                    value={block}
-                    onChange={(value) => handleChange(value)}
-                />
-            ))}
-        </div>
-    );
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      const updatedBlocks = blocks.map((block) => {
+        if (!block.startsWith("<button>")) {
+          return `<button></button>${block}`;
+        }
+        return block;
+      });
+    //   updatedBlocks.push("");
+      setBlocks(updatedBlocks);
+      console.log(updatedBlocks);
+    }
+  };
+  
+
+  return (
+    <div>
+      <ReactQuill
+        ref={quillRef}
+        // value={blocks.join("</p>")}
+        onChange={handleChange}
+        onKeyDown={handleKeyPress}
+      />
+    </div>
+  );
 };
 
 export default TextEditor;
