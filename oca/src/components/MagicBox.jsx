@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../styles/Magic.css";
 
 const MagicBox = (props) => {
@@ -9,8 +9,17 @@ const MagicBox = (props) => {
     const makeMagic = () => {
         const blocksAndSelection = props.returnBlockAndSelection();
         setPreSwitchContent(blocksAndSelection.selectedText);
+        setPostSwitchContent("Hi there");
         // console.log(props.returnBlockAndSelection());
     };
+
+    useEffect(() => {
+        if (!props.showMagicBox) {
+            setPreSwitchContent(null);
+            setPostSwitchContent(null);
+            setReasonContent(null);
+        }
+    }, [props.showMagicBox]);
 
     return (
         <div
@@ -41,9 +50,11 @@ const MagicBox = (props) => {
                 )}
             </div>
 
-            <button className={`magic-button`} onClick={makeMagic}>
-                Magic me!
-            </button>
+            {!postSwitchContent && (
+                <button className={`magic-button`} onClick={makeMagic}>
+                    Magic me!
+                </button>
+            )}
         </div>
     );
 };
