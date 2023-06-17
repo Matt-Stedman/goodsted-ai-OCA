@@ -4,7 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import MagicBox from "./MagicBox";
 
 const TextEditor = () => {
-    const [blocks, setBlocks] = useState([""]);
+    const [blocks, setBlocks] = useState();
     const [showMagicBox, setShowMagicBox] = useState(false);
     const [magicBoxPosition, setMagicBoxPosition] = useState({ x: 0, y: 0 });
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -52,9 +52,16 @@ const TextEditor = () => {
     /**
      * The Make Magic button's execution
      */
+    const returnContent = () => {
+        return unprivilegedEditorRef.current.getText();
+    };
+
+    /**
+     * The Make Magic button's execution
+     */
     const returnBlockAndSelection = () => {
         const selection = unprivilegedEditorRef.current.getSelection();
-        const content = unprivilegedEditorRef.current.getText();
+        const content = returnContent();
 
         if (selection) {
             const { index, length } = selection;
@@ -115,13 +122,16 @@ const TextEditor = () => {
         <div style={{ display: "block" }} onMouseMove={handleMouseMove}>
             <ReactQuill
                 ref={quillRef}
-                // value={blocks.join("</p>")}
+                // value="<p>Hi there how are you ?</p>" // Need some to capture the contents from previous, or start with a proposed layout
                 onChange={handleChange}
                 onKeyDown={handleKeyPress}
                 onChangeSelection={triggerButton}
+                theme="snow"
             />
             <MagicBox
                 magicBoxPosition={magicBoxPosition}
+                blocks={blocks}
+                returnContent={returnContent}
                 returnBlockAndSelection={returnBlockAndSelection}
                 showMagicBox={showMagicBox}
             />
