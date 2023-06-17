@@ -2,20 +2,64 @@ import React, { useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import MagicBox from "./MagicBox";
+import DOMPurify from "dompurify";
 
 const TextEditor = () => {
+    // content
     const [blocks, setBlocks] = useState();
+
+    // positioning
     const [showMagicBox, setShowMagicBox] = useState(false);
     const [magicBoxPosition, setMagicBoxPosition] = useState({ x: 0, y: 0 });
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+    // quill references
+    // const [quillValue, setQuillValue] = useState("");
     const quillRef = useRef();
     const editorRef = useRef();
     const unprivilegedEditorRef = useRef();
 
+    /**
+     * Handle any time the blocks change, remove imagfes because they're not allowed
+     */
     const handleChange = (value) => {
-        const formattedValue = value.replace(/<\/p>|<?br>|<?div>/g, "");
-        setBlocks(formattedValue.split("<p>"));
+        // console.log("Dirty: ", value);
+
+        let sanitized_value = DOMPurify.sanitize(value, { FORBID_TAGS: ["img", "a"] });
+        // console.log("Clean: ", sanitized_value);
+        if (sanitized_value !== DOMPurify.sanitize(value)) {
+            quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(sanitized_value);
+        }
+        // const formattedValue = sanitized_value.replace(/<\/p>|<?br>|<?div>|<?h1?>|<?h2?>|<?strong?>/g, "");
+        const formattedValue = quillRef.current.getEditor().getText();
+        setBlocks(formattedValue.split("\n"));
+        // console.log("Set blocks: ", formattedValue);
+    };
+
+    /**
+     * Switch out text in the editor from a value before to a value after
+     */
+    const switchOutText = (before, after) => {
+        console.log("Replacing : ", before, " with : ", after);
+        let currentQuillContents = quillRef.current.getEditor().root.innerHTML;
+        console.log("Was: ", currentQuillContents);
+        before = before
+            .replace("&", /&amp;/g)
+            .replace("<", /&lt;/g)
+            .replace(">", /&gt;/g)
+            .replace('"', /&quot;/g)
+            .replace("'", /&apos;/g)
+            .replace("'", /&#39;/g);
+        currentQuillContents = currentQuillContents.replace(before, after);
+
+        console.log("Becomes: ", currentQuillContents);
+        // Clear the conents
+        quillRef.current.getEditor().setContents();
+
+        currentQuillContents.replace("<p><br></p>", "");
+
+        // Paste the changes
+        quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(0, currentQuillContents);
     };
 
     const handleKeyPress = (event) => {
@@ -122,9 +166,9 @@ const TextEditor = () => {
         <div style={{ display: "block" }} onMouseMove={handleMouseMove}>
             <ReactQuill
                 ref={quillRef}
-                // value="<p>Hi there how are you ?</p>" // Need some to capture the contents from previous, or start with a proposed layout
+                // value={quillValue} // Need some to capture the contents from previous, or start with a proposed layout
                 onChange={handleChange}
-                onKeyDown={handleKeyPress}
+                // onKeyDown={handleKeyPress}
                 onChangeSelection={triggerButton}
                 theme="snow"
             />
@@ -134,6 +178,7 @@ const TextEditor = () => {
                 returnContent={returnContent}
                 returnBlockAndSelection={returnBlockAndSelection}
                 showMagicBox={showMagicBox}
+                switchOutText={switchOutText}
             />
         </div>
     );

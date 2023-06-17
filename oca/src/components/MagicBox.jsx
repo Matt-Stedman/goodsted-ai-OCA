@@ -46,24 +46,28 @@ const MagicBox = (props) => {
         while ((match = regex.exec(feedbackString)) !== null) {
             const change = match[1].trim();
 
-            if (change === "NO FEEDBACK") {
-                feedback.push({
-                    CHANGE: change,
-                    TO: "This block is fine, nothing to change here",
-                    BECAUSE: "This block is fine, nothing to change here",
-                });
-            } else {
-                feedback.push({
-                    CHANGE: change,
-                    TO: match[2].trim(),
-                    BECAUSE: match[3].trim(),
-                });
-            }
+            feedback.push({
+                CHANGE: change
+                    .replace(/^[^\w\s]+|^[^\w\s]+$/g, "")
+                    .replace(/^['"]|['"]$/g, "")
+                    .trim(),
+                TO: match[2]
+                    .replace(/^[^\w\s]+|^[^\w\s]+$/g, "")
+                    .replace(/^['"]|['"]$/g, "")
+                    .trim(),
+                BECAUSE: match[3]
+                    .replace(/^[^\w\s]+|^[^\w\s]+$/g, "")
+                    .replace(/^['"]|['"]$/g, "")
+                    .trim(),
+            });
         }
         setErrorMessage(); // Clear the error message if we get here
         return feedback;
     }
 
+    /**
+     * Make some general feedback magic
+     */
     const makeGeneralMagic = async () => {
         const opportunityContent = props.returnContent();
         setGeneralFeedbackLoading(true);
@@ -76,6 +80,14 @@ const MagicBox = (props) => {
         }
         console.log("parsed_generalFeedback: ", parsed_generalFeedback);
         setGeneralFeedbackLoading(false);
+    };
+
+    /**
+     * Switch out general proxy
+     */
+    const switchOutTextWrapper = (index, before, after) => {
+        generalFeedback.splice(index, 1);
+        props.switchOutText(before, after);
     };
 
     useEffect(() => {
@@ -117,9 +129,7 @@ const MagicBox = (props) => {
                 </div>
 
                 {!postSwitchContent && (
-                    <button className={`magic-button`} onClick={makeMagic}>
-                        ✨ Magic me! ✨
-                    </button>
+                    <button className={`magic-button`}>{/* onClick={makeMagic}> */}✨ Magic me! ✨</button>
                 )}
             </div>
             {props.blocks?.some((item) => Boolean(item)) && (
@@ -133,27 +143,47 @@ const MagicBox = (props) => {
             )}
             {generalFeedback?.some((item) => Boolean(item)) && (
                 <div className="magic">
-                    <div className="grid-container">
-                        <div className="grid-item left">
-                            <h2 className="title">Change</h2>
+                    <button
+                        className="magic-button"
+                        onClick={() => {
+                            setGeneralFeedback();
+                        }}
+                    >
+                        Clear
+                    </button>
+                    <table className="grid-container">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <h2>I would change</h2>
+                                </th>
+                                <th>
+                                    <h2>to</h2>
+                                </th>
+                                <th>
+                                    <h2>because</h2>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             {generalFeedback.map((item, index) => (
-                                <p key={index}>{item.CHANGE}</p>
+                                <tr key={index}>
+                                    <td>{item.CHANGE}</td>
+                                    <td>
+                                        <button
+                                            className="magic-button"
+                                            style={{ padding: "2px" }}
+                                            onClick={() => props.switchOutText(item.CHANGE, item.TO)}
+                                        >
+                                            <img src="assets/switch_icon.png" width="15px" />
+                                        </button>{" "}
+                                        {item.TO}
+                                    </td>
+                                    <td>{item.BECAUSE}</td>
+                                </tr>
                             ))}
-                        </div>
-
-                        <div className="grid-item right top">
-                            <h2 className="title">We recommend: </h2>
-                            {generalFeedback.map((item, index) => (
-                                <p key={index}>{item.TO}</p>
-                            ))}
-                        </div>
-                        <div className="grid-item right bottom">
-                            <h2 className="title">This is because...</h2>
-                            {generalFeedback.map((item, index) => (
-                                <p key={index}>{item.BECAUSE}</p>
-                            ))}
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             )}
             {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
