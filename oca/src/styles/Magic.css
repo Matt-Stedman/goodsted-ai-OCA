@@ -1,9 +1,12 @@
 .magic {
-
+    border: 1px #ddd solid;
     background-color: white; /* Customize the button background color */
     font-family: Helvetica, Arial, sans-serif;
     font-size: 13px;
-    box-shadow: 3px 3px rgb(94, 94, 94), -1em 0 .4em rgb(233, 233, 203);
+}
+
+.magic.hidden {
+    opacity: 0;
 }
 
 .magic-box {
@@ -15,10 +18,7 @@
     border: 1px #ddd solid;
     border-radius: 12px;
     margin: 0;
-}
-
-.magic-box.hidden {
-    opacity: 0;
+    box-shadow: 3px 3px rgb(94, 94, 94), -1em 0 .4em rgb(233, 233, 203);
 }
 
 .magic-button {
@@ -28,8 +28,9 @@
     z-index: 9999; /*Adjust the z-index as needed to ensure the button appears on top */
     background-color: white; /* Customize the button background color */
     border: 1px #ddd solid;
-    border-radius: 12px;
+    /* border-radius: 12px; */
     padding: 6px 12px;
+    min-height: 42px;
 }
 
 .grid-container {

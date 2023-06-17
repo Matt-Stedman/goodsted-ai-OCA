@@ -85,9 +85,9 @@ const MagicBox = (props) => {
     /**
      * Switch out general proxy
      */
-    const switchOutTextWrapper = (index, before, after) => {
+    const switchOutTextWrapper = (index) => {
+        props.switchOutText(generalFeedback[index].CHANGE, generalFeedback[index].TO);
         generalFeedback.splice(index, 1);
-        props.switchOutText(before, after);
     };
 
     useEffect(() => {
@@ -133,21 +133,29 @@ const MagicBox = (props) => {
                 )}
             </div>
             {props.blocks?.some((item) => Boolean(item)) && (
-                <button className="magic-button" onClick={makeGeneralMagic}>
+                <button
+                    className="magic-button"
+                    style={{ width: "100%" }}
+                    onClick={makeGeneralMagic}
+                    disabled={generalFeedbackLoading}
+                >
                     {generalFeedbackLoading ? (
                         <img src="assets/loading_inline.gif" width="130" height="17" />
+                    ) : generalFeedback?.some((item) => Boolean(item)) ? (
+                        "✨ Try again ✨"
                     ) : (
-                        "✨ General magic ✨"
+                        "✨ Spruce this up! ✨"
                     )}
                 </button>
             )}
             {generalFeedback?.some((item) => Boolean(item)) && (
-                <div className="magic">
+                <div className="magic" style={props.style}>
                     <button
                         className="magic-button"
                         onClick={() => {
                             setGeneralFeedback();
                         }}
+                        style={{ float: "right" }}
                     >
                         Clear
                     </button>
@@ -171,11 +179,15 @@ const MagicBox = (props) => {
                                     <td>{item.CHANGE}</td>
                                     <td>
                                         <button
-                                            className="magic-button"
-                                            style={{ padding: "2px" }}
-                                            onClick={() => props.switchOutText(item.CHANGE, item.TO)}
+                                            style={{
+                                                padding: "2px",
+                                                border: "#ddd solid 1px",
+                                                borderRadius: 10,
+                                                background: "white",
+                                            }}
+                                            onClick={() => switchOutTextWrapper(index)}
                                         >
-                                            <img src="assets/switch_icon.png" width="15px" />
+                                            <img src="assets/switch_icon.png" height="10px" />
                                         </button>{" "}
                                         {item.TO}
                                     </td>

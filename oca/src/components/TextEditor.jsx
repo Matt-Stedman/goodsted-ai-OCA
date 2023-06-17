@@ -3,6 +3,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import MagicBox from "./MagicBox";
 import DOMPurify from "dompurify";
+import SplitPane, { Pane } from "split-pane-react";
+import "split-pane-react/esm/themes/default.css";
 
 const TextEditor = () => {
     // content
@@ -19,6 +21,15 @@ const TextEditor = () => {
     const editorRef = useRef();
     const unprivilegedEditorRef = useRef();
 
+    // panes
+    const [paneSizes, setPaneSizes] = useState(["80%", "20%"]);
+    const paneLayoutCSS = {
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    };
+
     /**
      * Handle any time the blocks change, remove imagfes because they're not allowed
      */
@@ -32,8 +43,9 @@ const TextEditor = () => {
         }
         // const formattedValue = sanitized_value.replace(/<\/p>|<?br>|<?div>|<?h1?>|<?h2?>|<?strong?>/g, "");
         const formattedValue = quillRef.current.getEditor().getText();
-        setBlocks(formattedValue.split("\n"));
-        // console.log("Set blocks: ", formattedValue);
+        const filteredBlocks = formattedValue.split("\n").filter((block) => block.trim() !== "");
+        setBlocks(filteredBlocks);
+        // console.log("Set blocks: ", filteredBlocks);
     };
 
     /**
@@ -42,7 +54,7 @@ const TextEditor = () => {
     const switchOutText = (before, after) => {
         console.log("Replacing : ", before, " with : ", after);
         let currentQuillContents = quillRef.current.getEditor().root.innerHTML;
-        console.log("Was: ", currentQuillContents);
+        // console.log("Was: ", currentQuillContents);
         before = before
             .replace("&", /&amp;/g)
             .replace("<", /&lt;/g)
@@ -52,7 +64,7 @@ const TextEditor = () => {
             .replace("'", /&#39;/g);
         currentQuillContents = currentQuillContents.replace(before, after);
 
-        console.log("Becomes: ", currentQuillContents);
+        // console.log("Becomes: ", currentQuillContents);
         // Clear the conents
         quillRef.current.getEditor().setContents();
 
@@ -163,23 +175,33 @@ const TextEditor = () => {
     }, []);
 
     return (
-        <div style={{ display: "block" }} onMouseMove={handleMouseMove}>
-            <ReactQuill
-                ref={quillRef}
-                // value={quillValue} // Need some to capture the contents from previous, or start with a proposed layout
-                onChange={handleChange}
-                // onKeyDown={handleKeyPress}
-                onChangeSelection={triggerButton}
-                theme="snow"
-            />
-            <MagicBox
-                magicBoxPosition={magicBoxPosition}
-                blocks={blocks}
-                returnContent={returnContent}
-                returnBlockAndSelection={returnBlockAndSelection}
-                showMagicBox={showMagicBox}
-                switchOutText={switchOutText}
-            />
+        <div style={{ height: 800, display: "block" }} onMouseMove={handleMouseMove}>
+            <SplitPane split="vertical" sizes={paneSizes} onChange={setPaneSizes}>
+                <Pane minSize="10%" maxSize="90%">
+                    {/* <div style={{ ...paneLayoutCSS, background: "#ddd" }}>pane1</div> */}
+                    <ReactQuill
+                        ref={quillRef}
+                        // value={quillValue} // Need some to capture the contents from previous, or start with a proposed layout
+                        onChange={handleChange}
+                        // onKeyDown={handleKeyPress}
+                        onChangeSelection={triggerButton}
+                        theme="snow"
+                        style={{ height: 750 }}
+                    />
+                </Pane>
+                <Pane minSize="10%" maxSize="90%">
+                    <MagicBox
+                        magicBoxPosition={magicBoxPosition}
+                        blocks={blocks}
+                        returnContent={returnContent}
+                        returnBlockAndSelection={returnBlockAndSelection}
+                        showMagicBox={showMagicBox}
+                        switchOutText={switchOutText}
+                        style={{ height: 750, border: "#bbb 2px solid", overflow: "auto" }}
+                    />
+                </Pane>
+                {/* <div style={{ ...paneLayoutCSS, background: "#d5d7d9" }}>pane2</div> */}
+            </SplitPane>
         </div>
     );
 };
