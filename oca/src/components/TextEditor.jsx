@@ -14,6 +14,7 @@ const TextEditor = () => {
     const [showMagicBox, setShowMagicBox] = useState(false);
     const [magicBoxPosition, setMagicBoxPosition] = useState({ x: 0, y: 0 });
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [windowHeight, setWindowHeight] = useState(960);
 
     // quill references
     // const [quillValue, setQuillValue] = useState("");
@@ -50,25 +51,23 @@ const TextEditor = () => {
      * Switch out text in the editor from a value before to a value after
      */
     const switchOutText = (before, after) => {
-        let currentQuillContents = quillRef.current.getEditor().root.innerHTML;
+        const currentQuillContents = quillRef.current.getEditor().root.innerHTML;
         console.log("Was: ", currentQuillContents);
-        before = before
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace('"', "&quot;")
-            .replace("'", "&apos;")
-            .replace("'", "&#39;");
+        before = before.replace("&", "&amp;");
         console.log("Replacing : ", before, " with : ", after);
-        currentQuillContents = currentQuillContents.replace(before, after);
+        let postQuillContents = currentQuillContents.replace(before, after);
+        if (postQuillContents === currentQuillContents) {
+            return false;
+        }
 
-        console.log("Becomes: ", currentQuillContents);
+        console.log("Becomes: ", postQuillContents);
         // Clear the conents
         quillRef.current.getEditor().setContents();
-        currentQuillContents = currentQuillContents.replaceAll("<p><br></p>", "");
+        postQuillContents = postQuillContents.replaceAll("<p><br></p>", "");
 
         // Paste the changes
-        quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(0, currentQuillContents);
+        quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(0, postQuillContents);
+        return true;
     };
 
     /**
@@ -179,7 +178,7 @@ const TextEditor = () => {
     }, []);
 
     return (
-        <div style={{ height: 800, display: "block" }} onMouseMove={handleMouseMove}>
+        <div style={{ height: windowHeight, display: "block" }} onMouseMove={handleMouseMove}>
             <SplitPane split="vertical" sizes={paneSizes} onChange={setPaneSizes}>
                 <Pane minSize="50%">
                     {/* <div style={{ ...paneLayoutCSS, background: "#ddd" }}>pane1</div> */}
@@ -189,7 +188,7 @@ const TextEditor = () => {
                         onChange={handleChange}
                         onChangeSelection={triggerButton}
                         theme="snow"
-                        style={{ height: 750 }}
+                        style={{ height: windowHeight - 50 }}
                     />
                 </Pane>
                 <Pane minSize="10%">
@@ -205,7 +204,7 @@ const TextEditor = () => {
                         showMagicBox={showMagicBox}
                         magicBoxPosition={magicBoxPosition}
                         // Handle custom styling
-                        style={{ height: 748, borderBottom: "#bbb 1px solid", overflow: "auto" }}
+                        style={{ height: windowHeight - 52, borderBottom: "#bbb 1px solid", overflow: "auto" }}
                     />
                 </Pane>
                 {/* <div style={{ ...paneLayoutCSS, background: "#d5d7d9" }}>pane2</div> */}

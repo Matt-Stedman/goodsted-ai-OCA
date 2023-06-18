@@ -101,11 +101,13 @@ const MagicBox = (props) => {
                 CHANGE: change
                     .replace(/(^[^\w\s]+)|([^\w\s]+$)/g, "")
                     .replace(/(^['"])|(['"]$)/g, "")
-                    .trim(),
+                    .trim()
+                    .replace(/^["']|["']$/g, ""),
                 TO: match[2]
                     .replace(/(^[^\w\s]+)|([^\w\s]+$)/g, "")
                     .replace(/(^['"])|(['"]$)/g, "")
-                    .trim(),
+                    .trim()
+                    .replace(/^["']|["']$/g, ""),
                 BECAUSE: match[3]
                     .replace(/(^[^\w\s]+)|([^\w\s]+$)/g, "")
                     .replace(/(^['"])|(['"]$)/g, "")
@@ -117,13 +119,29 @@ const MagicBox = (props) => {
     }
 
     /**
+     * Function to evaluate if there's any feedback to display
+     */
+    const displayFeedback = () => {
+        return {
+            General: Boolean(generalFeedback?.some((item) => Boolean(item))),
+            Checklist: Boolean(Object.values(checklistFeedback?.items).some((item) => Boolean(item))),
+            Any:
+                Boolean(generalFeedback?.some((item) => Boolean(item))) ||
+                Boolean(Object.values(checklistFeedback?.items).some((item) => Boolean(item))),
+        };
+    };
+
+    const clearAllFeedback = () => {
+        setGeneralFeedback();
+        setChecklistFeedback({ items: [], notes: "" });
+    };
+    /**
      * Make some general feedback magic
      */
     const makeGeneralMagic = async () => {
         const opportunityContent = props.returnContent();
         setFeedbackLoading(true);
-        setGeneralFeedback();
-        setChecklistFeedback();
+        clearAllFeedback();
 
         // Check against a checklist to ensure all information is accounted for
         const unparsed_checklistFeedback = await reviewEntireOpportunityAgainstChecklist(opportunityContent);
@@ -153,7 +171,19 @@ const MagicBox = (props) => {
      * Switch out general proxy
      */
     const switchOutTextWrapper = (index) => {
-        props.switchOutText(generalFeedback[index].CHANGE, generalFeedback[index].TO);
+        if (props.switchOutText(generalFeedback[index].CHANGE, generalFeedback[index].TO)) {
+            generalFeedback.splice(index, 1);
+        } else {
+            const tmp = generalFeedback[index].CHANGE.replace("WE COULDN'T MAKE THIS CHANGE -- ", "");
+            generalFeedback[index].CHANGE = "WE COULDN'T MAKE THIS CHANGE -- " + tmp;
+            console.log(generalFeedback[index]);
+        }
+    };
+
+    /**
+     * Switch out general proxy
+     */
+    const deleteGeneralFeedback = (index) => {
         generalFeedback.splice(index, 1);
     };
 
@@ -219,13 +249,13 @@ const MagicBox = (props) => {
             {props.blocks?.some((item) => Boolean(item)) && (
                 <button
                     className="magic-button"
-                    style={{ width: generalFeedback?.some((item) => Boolean(item)) ? "80%" : "100%" }}
+                    style={{ width: displayFeedback().Any ? "80%" : "100%" }}
                     onClick={makeGeneralMagic}
                     disabled={feedbackLoading}
                 >
                     {feedbackLoading ? (
                         <img src="assets/loading_inline.gif" width="130" height="17" />
-                    ) : generalFeedback?.some((item) => Boolean(item)) ? (
+                    ) : displayFeedback().Any ? (
                         "✨ Try again ✨"
                     ) : (
                         "✨ Let's improve this ✨"
@@ -233,22 +263,21 @@ const MagicBox = (props) => {
                 </button>
             )}
             {/* Clear button and error message */}
-            {generalFeedback?.some((item) => Boolean(item)) && (
-                <button
-                    className="magic-button"
-                    onClick={() => {
-                        setGeneralFeedback();
-                    }}
-                    style={{ width: "20%" }}
-                >
+            {displayFeedback().Any && (
+                <button className="magic-button" onClick={clearAllFeedback} style={{ width: "20%" }}>
                     Clear
                 </button>
             )}
             {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
             {/* Side panel content */}
-            {generalFeedback?.some((item) => Boolean(item)) && (
+            {displayFeedback().Any && (
                 <div className="magic" style={props.style}>
-                    <SplitPane style={{ height: 718 }} split="horizontal" sizes={paneSizes} onChange={setPaneSizes}>
+                    <SplitPane
+                        style={{ height: props.style.height - 30 }}
+                        split="horizontal"
+                        sizes={paneSizes}
+                        onChange={setPaneSizes}
+                    >
                         {/* Checklist feedback region */}
                         <Pane minSize="15%" style={{ borderBottom: "#bbb 1px solid ", overflow: "auto" }}>
                             <h1>What's missing?</h1>
@@ -282,7 +311,7 @@ const MagicBox = (props) => {
                                 </tbody>
                             </table>
                             {checklistFeedback?.notes && (
-                                <div style={{ textAlign: "left", padding: "12px"}}>
+                                <div style={{ textAlign: "left", padding: "12px" }}>
                                     <strong>Notes</strong>
                                     <p>{checklistFeedback?.notes}</p>
                                 </div>
@@ -303,30 +332,46 @@ const MagicBox = (props) => {
                                         <th>
                                             <h2>because</h2>
                                         </th>
+                                        <th style={{ width: "1%" }} />
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {generalFeedback.map((item, index) => (
-                                        <tr key={index}>
-                                            <td>{item.CHANGE}</td>
-                                            <td>
-                                                <button
-                                                    style={{
-                                                        padding: "2px",
-                                                        border: "#ddd solid 1px",
-                                                        borderRadius: 10,
-                                                        background: "white",
-                                                        marginRight: "5px",
-                                                    }}
-                                                    onClick={() => switchOutTextWrapper(index)}
-                                                >
-                                                    <img src="assets/switch_icon.png" height="10px" />
-                                                </button>{" "}
-                                                {item.TO}
-                                            </td>
-                                            <td>{item.BECAUSE}</td>
-                                        </tr>
-                                    ))}
+                                    {displayFeedback().General &&
+                                        generalFeedback.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.CHANGE}</td>
+                                                <td>
+                                                    <button
+                                                        style={{
+                                                            padding: "2px",
+                                                            border: "#ddd solid 1px",
+                                                            borderRadius: 10,
+                                                            background: "white",
+                                                            marginRight: "5px",
+                                                        }}
+                                                        onClick={() => switchOutTextWrapper(index)}
+                                                    >
+                                                        <img src="assets/switch_icon.png" height="10px" />
+                                                    </button>{" "}
+                                                    {item.TO}
+                                                </td>
+                                                <td>{item.BECAUSE}</td>
+                                                <td style={{ width: "1%" }}>
+                                                    <button
+                                                        style={{
+                                                            padding: "1px 4px 1px 4px",
+                                                            border: "#eee solid 1px",
+                                                            borderRadius: 10,
+                                                            background: "white",
+                                                            fontSize: "10px",
+                                                        }}
+                                                        onClick={() => deleteGeneralFeedback(index)}
+                                                    >
+                                                        ❌
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
                         </Pane>
