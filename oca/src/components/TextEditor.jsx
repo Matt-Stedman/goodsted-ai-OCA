@@ -23,21 +23,19 @@ const TextEditor = () => {
 
     // panes
     const [paneSizes, setPaneSizes] = useState(["80%", "20%"]);
-    const paneLayoutCSS = {
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    };
 
     /**
      * Handle any time the blocks change, remove imagfes because they're not allowed
      */
     const handleChange = (value) => {
         // console.log("Dirty: ", value);
+        value = value.replaceAll("<p><br></p>", "");
 
         let sanitized_value = DOMPurify.sanitize(value, { FORBID_TAGS: ["img", "a"] });
+        sanitized_value = DOMPurify.sanitize(sanitized_value, { FORBID_TAGS: ["br"], FORBID_CONTENTS: ["p"] });
         // console.log("Clean: ", sanitized_value);
+
+        // console.log(sanitized_value);
         if (sanitized_value !== DOMPurify.sanitize(value)) {
             quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(sanitized_value);
         }
@@ -52,36 +50,42 @@ const TextEditor = () => {
      * Switch out text in the editor from a value before to a value after
      */
     const switchOutText = (before, after) => {
-        console.log("Replacing : ", before, " with : ", after);
         let currentQuillContents = quillRef.current.getEditor().root.innerHTML;
-        // console.log("Was: ", currentQuillContents);
+        console.log("Was: ", currentQuillContents);
         before = before
-            .replace("&", /&amp;/g)
-            .replace("<", /&lt;/g)
-            .replace(">", /&gt;/g)
-            .replace('"', /&quot;/g)
-            .replace("'", /&apos;/g)
-            .replace("'", /&#39;/g);
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+            .replace("'", "&apos;")
+            .replace("'", "&#39;");
+        console.log("Replacing : ", before, " with : ", after);
         currentQuillContents = currentQuillContents.replace(before, after);
 
-        // console.log("Becomes: ", currentQuillContents);
+        console.log("Becomes: ", currentQuillContents);
         // Clear the conents
         quillRef.current.getEditor().setContents();
-
-        currentQuillContents.replace("<p><br></p>", "");
+        currentQuillContents = currentQuillContents.replaceAll("<p><br></p>", "");
 
         // Paste the changes
         quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(0, currentQuillContents);
     };
 
-    const handleKeyPress = (event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault();
-            const updatedBlocks = [...blocks];
-            //   updatedBlocks.push("");
-            setBlocks(updatedBlocks);
-            console.log(updatedBlocks);
-        }
+    /**
+     * Switch out text in the editor from a value before to a value after
+     */
+    const addSectionToContent = (html) => {
+        console.log("Adding : ", html);
+        let currentQuillContents = quillRef.current.getEditor().root.innerHTML;
+        currentQuillContents += html;
+
+        // Clear the conents
+        quillRef.current.getEditor().setContents();
+        currentQuillContents = currentQuillContents.replaceAll("<p><br></p>", "");
+        console.log(currentQuillContents);
+
+        // Paste the changes
+        quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(0, currentQuillContents);
     };
 
     /**
@@ -177,27 +181,31 @@ const TextEditor = () => {
     return (
         <div style={{ height: 800, display: "block" }} onMouseMove={handleMouseMove}>
             <SplitPane split="vertical" sizes={paneSizes} onChange={setPaneSizes}>
-                <Pane minSize="10%" maxSize="90%">
+                <Pane minSize="50%">
                     {/* <div style={{ ...paneLayoutCSS, background: "#ddd" }}>pane1</div> */}
                     <ReactQuill
                         ref={quillRef}
                         // value={quillValue} // Need some to capture the contents from previous, or start with a proposed layout
                         onChange={handleChange}
-                        // onKeyDown={handleKeyPress}
                         onChangeSelection={triggerButton}
                         theme="snow"
                         style={{ height: 750 }}
                     />
                 </Pane>
-                <Pane minSize="10%" maxSize="90%">
+                <Pane minSize="10%">
                     <MagicBox
-                        magicBoxPosition={magicBoxPosition}
+                        // Handle content retrieving
                         blocks={blocks}
                         returnContent={returnContent}
                         returnBlockAndSelection={returnBlockAndSelection}
-                        showMagicBox={showMagicBox}
+                        // Handle content manipulation
+                        addSectionToContent={addSectionToContent}
                         switchOutText={switchOutText}
-                        style={{ height: 750, border: "#bbb 2px solid", overflow: "auto" }}
+                        // Handle magic box
+                        showMagicBox={showMagicBox}
+                        magicBoxPosition={magicBoxPosition}
+                        // Handle custom styling
+                        style={{ height: 748, borderBottom: "#bbb 1px solid", overflow: "auto" }}
                     />
                 </Pane>
                 {/* <div style={{ ...paneLayoutCSS, background: "#d5d7d9" }}>pane2</div> */}
