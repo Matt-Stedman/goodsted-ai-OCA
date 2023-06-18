@@ -214,10 +214,12 @@ const MagicBox = (props) => {
         >
             {/* Floating magic button area */}
             <div
-                className={`magic magic-box${props.showMagicBox ? "" : " hidden"}`}
+                // TODO we need to put back in the magic button when we're ready!
+                // className={`magic magic-box${props.showMagicBox ? ""/ : " hidden"}`}
                 style={{
                     top: props.magicBoxPosition.y,
                     left: props.magicBoxPosition.x,
+                    display: "none",
                 }}
             >
                 <div className="grid-container">
