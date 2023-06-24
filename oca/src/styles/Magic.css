@@ -1,19 +1,24 @@
+.magic {
+    border: 1px #ddd solid;
+    background-color: white; /* Customize the button background color */
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+.magic.hidden {
+    opacity: 0;
+}
+
 .magic-box {
     /* ...existing button styles... */
     opacity: 1;
     transition: opacity 0.5s ease;
     position: fixed;
     z-index: 9999; /*Adjust the z-index as needed to ensure the button appears on top */
-    background-color: white; /* Customize the button background color */
     border: 1px #ddd solid;
     border-radius: 12px;
     margin: 0;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 13px;
-}
-
-.magic-box.hidden {
-    opacity: 0;
+    box-shadow: 3px 3px rgb(94, 94, 94), -1em 0 .4em rgb(233, 233, 203);
 }
 
 .magic-button {
@@ -23,22 +28,32 @@
     z-index: 9999; /*Adjust the z-index as needed to ensure the button appears on top */
     background-color: white; /* Customize the button background color */
     border: 1px #ddd solid;
-    border-radius: 12px;
+    /* border-radius: 12px; */
     padding: 6px 12px;
+    min-height: 42px;
 }
 
 .grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
-    gap: 10px;
+    width: 100%;
 }
 
 .grid-item {
+    flex: 1;
     border-right: 1px solid #ddd;
     padding: 10px;
 }
 
 h2 {
     font-size: 18px;
+}
+
+.magic table {
+    width: 100%;
+}
+
+.magic th, .magic td {
+    width: 33%; /* Make each cell 1/3 of the total width */
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
