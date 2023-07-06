@@ -1,5 +1,34 @@
-# Getting Started with Create React App
+# OCA - React app
 
+## AI-driven Opportunity Creation Assistance - OCA
+Lead: [matt-stedman](https://github.com/Matt-Stedman/)
+
+### Why
+Not all opportunities are created equal. Sometimes, good sales of a "less worthy" opportunity will get more volunteers than a poorly sold "urgent and important" opportunity.
+
+### How
+Remove "sales-ability" effort from the opportunity posting.
+
+### What
+Goodsted simplifies opportunity posting with AI-powered assistance. As users create their opportunity posts, the AI system provides helpful suggestions to enhance the quality and effectiveness of the listings. By reducing the effort required to create compelling posts, Goodsted empowers opportunity posters to focus on the core details that matter, ultimately attracting more volunteers and maximizing the impact of their initiatives.
+
+## To run
+
+This is a ReactJS Front-end only application.
+To run, first ensure you have `npm` installed, then run `npm run i` to install all dependencies.
+
+Once all dependencies are installed you can run `npm run start` to start the service.
+
+### You will need
+
+We require an OpenAI API key in the `secrets.js` file. You can generate your own OpenAI api key by signined up on [the Open AI API website](https://openai.com/blog/openai-api).
+
+Your `secrets.js` file will look like:
+```js
+export const OPEN_AI_API_KEY = "YOUR OPENAI API KEY";
+```
+
+## React pre-amble
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -29,37 +58,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
 ### Deployment
 
