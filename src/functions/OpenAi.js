@@ -1,6 +1,7 @@
-import { OPEN_AI_API_KEY } from "../secrets";
+
 import axios from "axios";
 
+const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
 const apiClient = axios.create({
     baseURL: "https://api.openai.com/v1",
     headers: {
