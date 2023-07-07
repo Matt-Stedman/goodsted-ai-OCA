@@ -1,11 +1,9 @@
 
 import axios from "axios";
 
-const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
 const apiClient = axios.create({
-    baseURL: "https://api.openai.com/v1",
+    baseURL: "https://chatapi.free.beeceptor.com/v1",
     headers: {
-        Authorization: `Bearer ${OPEN_AI_API_KEY}`,
         "Content-Type": "application/json",
     },
 });
