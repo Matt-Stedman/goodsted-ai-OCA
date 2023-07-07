@@ -86,6 +86,53 @@ export async function reviewEntireOpportunityAgainstChecklist(opportunity) {
 }
 
 /**
+ * Function to create a posting given a form response
+ */
+export async function createOpportunityFromForm(form_data) {
+    const prompt = `
+        I am writing a volunteering opportunity. Please convert the following bulletpoints (at the end of my message, under THIS IS THE DATA) into the format:
+        
+        ${Object.entries(checklist)
+            .map(([topic, description]) => `- ${topic}: ${description}`)
+            .join("\n")}
+
+        For each topic, either list what you find in the opportunity text or can reliably infer, however if you cannot find any information relating to that topic just completely ignore it.
+        So if there is no Deadline detailed, for example, do not return the deadline topic. Include html formatting for headers where each header is <h1> .. </h1> and each topic is wrapped in <p> .. </p>.
+
+        THIS IS THE DATA:
+        
+        *What do we want to achieve?*
+        ${form_data.what_do_we_want_to_achieve}
+        
+        *What do we need help with?*
+        ${form_data.what_do_we_need_help_with}
+        
+        *What do we already have in place?*
+        ${form_data.what_do_we_already_have_in_place}
+
+        
+        *Meta data*
+        Location: ${form_data.metadata.loction}
+        Title: ${form_data.metadata.title}
+        Cause: ${form_data.metadata.cause}
+        Deadline: ${form_data.metadata.deadline}
+        Skills: ${form_data.metadata.skills.map((skill) => skill).join(", ")}
+        Poster: ${form_data.metadata.poster}
+        Company: ${form_data.metadata.company}
+        `;
+
+    const response = await apiClient.post("/chat/completions", {
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-3.5-turbo",
+    });
+
+    console.log(response);
+    let content = response.data.choices[0].message.content;
+
+    return content;
+}
+
+/**
  * Function to get feedback on updates
  */
 export async function getFeedbackOnUpdate(currentOpportunity, pastOpportunities) {

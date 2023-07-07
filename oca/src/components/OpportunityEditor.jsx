@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import MagicBox from "./MagicBox";
@@ -6,7 +6,7 @@ import DOMPurify from "dompurify";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
 
-const TextEditor = () => {
+const OpportunityEditor = (props) => {
     // content
     const [blocks, setBlocks] = useState();
 
@@ -14,7 +14,7 @@ const TextEditor = () => {
     const [showMagicBox, setShowMagicBox] = useState(false);
     const [magicBoxPosition, setMagicBoxPosition] = useState({ x: 0, y: 0 });
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [windowHeight, setWindowHeight] = useState(960);
+    const [windowHeight, setWindowHeight] = useState(860);
 
     // quill references
     // const [quillValue, setQuillValue] = useState("");
@@ -26,7 +26,7 @@ const TextEditor = () => {
     const [paneSizes, setPaneSizes] = useState(["80%", "20%"]);
 
     /**
-     * Handle any time the blocks change, remove imagfes because they're not allowed
+     * Handle any time the blocks change, remove images because they're not allowed
      */
     const handleChange = (value) => {
         // console.log("Dirty: ", value);
@@ -36,14 +36,16 @@ const TextEditor = () => {
         sanitized_value = DOMPurify.sanitize(sanitized_value, { FORBID_TAGS: ["br"], FORBID_CONTENTS: ["p"] });
         // console.log("Clean: ", sanitized_value);
 
-        // console.log(sanitized_value);
-        if (sanitized_value !== DOMPurify.sanitize(value)) {
-            quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(sanitized_value);
+        if (quillRef.current) {
+            // console.log(sanitized_value);
+            if (sanitized_value !== DOMPurify.sanitize(value)) {
+                quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(sanitized_value);
+            }
+            // const formattedValue = sanitized_value.replace(/<\/p>|<?br>|<?div>|<?h1?>|<?h2?>|<?strong?>/g, "");
+            const formattedValue = quillRef.current.getEditor().getText();
+            const filteredBlocks = formattedValue.split("\n").filter((block) => block.trim() !== "");
+            setBlocks(filteredBlocks);
         }
-        // const formattedValue = sanitized_value.replace(/<\/p>|<?br>|<?div>|<?h1?>|<?h2?>|<?strong?>/g, "");
-        const formattedValue = quillRef.current.getEditor().getText();
-        const filteredBlocks = formattedValue.split("\n").filter((block) => block.trim() !== "");
-        setBlocks(filteredBlocks);
         // console.log("Set blocks: ", filteredBlocks);
     };
 
@@ -78,7 +80,7 @@ const TextEditor = () => {
         let currentQuillContents = quillRef.current.getEditor().root.innerHTML;
         currentQuillContents += html;
 
-        // Clear the conents
+        // Clear the contents
         quillRef.current.getEditor().setContents();
         currentQuillContents = currentQuillContents.replaceAll("<p><br></p>", "");
         console.log(currentQuillContents);
@@ -170,7 +172,19 @@ const TextEditor = () => {
         //   setButtonPosition({ x: buttonX, y: buttonY });
     };
 
-    React.useEffect(() => {
+    /**
+     * Save the opportunity content to the parent so we can view it later
+     */
+    useEffect(() => {
+        if (quillRef.current) {
+            props.setOpportunityContent(quillRef.current.getEditor().root.innerHTML.replaceAll("<p><br></p>", ""));
+        }
+    }, [props.performAction]);
+
+    /**
+     * Load in the editor references for easier access in other parts of the flow
+     */
+    useEffect(() => {
         if (quillRef.current) {
             editorRef.current = quillRef.current.getEditor();
             unprivilegedEditorRef.current = quillRef.current.makeUnprivilegedEditor(editorRef.current);
@@ -189,6 +203,7 @@ const TextEditor = () => {
                         onChangeSelection={triggerButton}
                         theme="snow"
                         style={{ height: windowHeight - 50 }}
+                        defaultValue={props.opportunityContent}
                     />
                 </Pane>
                 <Pane minSize="10%">
@@ -212,5 +227,4 @@ const TextEditor = () => {
         </div>
     );
 };
-
-export default TextEditor;
+export default OpportunityEditor;
