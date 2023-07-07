@@ -1,54 +1,44 @@
 import React, { useState } from "react";
 import { Button, Grid, Checkbox, FormControlLabel, TextField, Box, MenuItem } from "@mui/material";
-import { DatePicker } from "@mui/lab";
 import { Tabs, Tab } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
+import { createOpportunityFromForm } from "../functions/OpenAi";
 
 const causeOptions = [
+    "Animal Welfare",
     "Arts & Culture",
-    "Community Engagement",
-    "Health & Wellbeing",
-    "Environment & Sustainability",
-    "Migration & Refugees",
-    "Education & Training",
-    "Homelessness & Housing",
-    "Mental Wellness & Resilience",
-    "Equality & Inclusion",
-    "Peace & Justice",
-    "Clean water & Sanitation",
+    "Black Lives Matter",
     "Children & Youth",
+    "Clean water & Sanitation",
+    "Community Engagement",
+    "COVID-19",
+    "Education & Training",
+    "Employment & Economic Growth",
+    "Environment & Sustainability",
+    "Equality & Inclusion",
+    "Financial Inclusion",
+    "Food & Agriculture",
+    "Health & Wellbeing",
+    "Homelessness & Housing",
     "Innovation & Infrastructure",
+    "Later Life & Elderly",
+    "Mental Wellness & Resilience",
+    "Migration & Refugees",
     "Partnerships & Collaboration",
+    "Peace & Justice",
+    "Poverty Relief",
 ];
 
-const Form = () => {
+const Form = (props) => {
     const [currentTab, setCurrentTab] = useState("1");
     const [performAction, setPerformAction] = useState(false);
-
-    const [formData, setFormData] = useState({
-        opportunity_type: "",
-        title: "",
-        organisation: "",
-        what_do_you_need_help_with: "",
-        what_do_you_already_have_in_place: "",
-        what_do_you_aim_to_achieve: [""],
-        skill: "",
-        secondary_skills: [""],
-        experience: "",
-        open_to_students: false,
-        number_of_volunteers: "",
-        location: "",
-        cause: "",
-        deadline: "",
-        user: "",
-    });
 
     /**
      * Handle the changing of form data
      */
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
+        props.setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -57,10 +47,16 @@ const Form = () => {
     /**
      * Handle the submitting of the form
      */
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Do something with the form data
-        console.log(formData);
+        console.log(props.formData);
+        await createOpportunityFromForm(props.formData).then((content) => {
+            props.setOpportunityContent(content);
+            console.log("Opportunity Content set to: ", content);
+        });
     };
+
+    const AIEnhance = () => {};
 
     /**
      * Handle the changing of tabs
@@ -88,7 +84,7 @@ const Form = () => {
                         name="opportunity_type"
                         label="What do you need help with?"
                         select
-                        value={formData.opportunity_type}
+                        value={props.formData.opportunity_type}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
@@ -103,35 +99,12 @@ const Form = () => {
                         name="cause"
                         label="What cause is this evolving?"
                         select
-                        value={formData.cause}
+                        value={props.formData.cause}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
                     >
-                        {[
-                            "Animal Welfare",
-                            "Arts & Culture",
-                            "Black Lives Matter",
-                            "Children & Youth",
-                            "Clean water & Sanitation",
-                            "Community Engagement",
-                            "COVID-19",
-                            "Education & Training",
-                            "Employment & Economic Growth",
-                            "Environment & Sustainability",
-                            "Equality & Inclusion",
-                            "Financial Inclusion",
-                            "Food & Agriculture",
-                            "Health & Wellbeing",
-                            "Homelessness & Housing",
-                            "Innovation & Infrastructure",
-                            "Later Life & Elderly",
-                            "Mental Wellness & Resilience",
-                            "Migration & Refugees",
-                            "Partnerships & Collaboration",
-                            "Peace & Justice",
-                            "Poverty Relief",
-                        ].map((cause) => (
+                        {causeOptions.map((cause) => (
                             <MenuItem key={cause} value={cause}>
                                 {cause}
                             </MenuItem>
@@ -153,7 +126,7 @@ const Form = () => {
                     <TextField
                         name="title"
                         label="What is your opportunity title?"
-                        value={formData.title}
+                        value={props.formData.title}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
@@ -162,7 +135,7 @@ const Form = () => {
                         name="organisation"
                         label="What organisation is leading this opportunity?"
                         select
-                        value={formData.organisation}
+                        value={props.formData.organisation}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
@@ -176,7 +149,7 @@ const Form = () => {
                     <TextField
                         name="what_do_you_need_help_with"
                         label="What do you need help with?"
-                        value={formData.what_do_you_need_help_with}
+                        value={props.formData.what_do_you_need_help_with}
                         onChange={handleChange}
                         fullWidth
                         multiline
@@ -186,7 +159,7 @@ const Form = () => {
                     <TextField
                         name="what_do_you_already_have_in_place"
                         label="What do you already have in place?"
-                        value={formData.what_do_you_already_have_in_place}
+                        value={props.formData.what_do_you_already_have_in_place}
                         onChange={handleChange}
                         fullWidth
                         multiline
@@ -194,14 +167,14 @@ const Form = () => {
                         margin="normal"
                     />
                     <div>
-                        {formData.what_do_you_aim_to_achieve.map((goal, index) => (
+                        {props.formData.what_do_you_aim_to_achieve.map((goal, index) => (
                             <TextField
                                 name="what_do_you_aim_to_achieve"
                                 label={`What ${index === 0 ? "" : "else"} do you aim to achieve?`}
-                                value={formData.what_do_you_aim_to_achieve[index]}
+                                value={props.formData.what_do_you_aim_to_achieve[index]}
                                 onChange={(e) => {
                                     const { name, value } = e.target;
-                                    setFormData((prevData) => ({
+                                    props.setFormData((prevData) => ({
                                         ...prevData,
                                         what_do_you_aim_to_achieve: prevData.what_do_you_aim_to_achieve.map((item, i) =>
                                             i === index ? value : item
@@ -215,7 +188,7 @@ const Form = () => {
                         ))}
                         <Button
                             onClick={() => {
-                                setFormData((prevData) => ({
+                                props.setFormData((prevData) => ({
                                     ...prevData,
                                     what_do_you_aim_to_achieve: [...prevData.what_do_you_aim_to_achieve, ""],
                                 }));
@@ -244,20 +217,20 @@ const Form = () => {
                     <TextField
                         name="skill"
                         label="What main skill is required to help you with this request?"
-                        value={formData.skill}
+                        value={props.formData.skill}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
                     />
                     <div>
-                        {formData.secondary_skills.map((goal, index) => (
+                        {props.formData.secondary_skills.map((goal, index) => (
                             <TextField
                                 name="secondary_skills"
                                 label={`What other skills would be helpful to have?`}
-                                value={formData.secondary_skills[index]}
+                                value={props.formData.secondary_skills[index]}
                                 onChange={(e) => {
                                     const { name, value } = e.target;
-                                    setFormData((prevData) => ({
+                                    props.setFormData((prevData) => ({
                                         ...prevData,
                                         secondary_skills: prevData.secondary_skills.map((item, i) =>
                                             i === index ? value : item
@@ -271,7 +244,7 @@ const Form = () => {
                         ))}
                         <Button
                             onClick={() => {
-                                setFormData((prevData) => ({
+                                props.setFormData((prevData) => ({
                                     ...prevData,
                                     secondary_skills: [...prevData.secondary_skills, ""],
                                 }));
@@ -285,7 +258,7 @@ const Form = () => {
                         name="experience"
                         label="What level of experience is required?"
                         select
-                        value={formData.experience}
+                        value={props.formData.experience}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
@@ -304,7 +277,7 @@ const Form = () => {
                     <TextField
                         name="number_of_volunteers"
                         label="How many volunteers are needed?"
-                        value={formData.number_of_volunteers}
+                        value={props.formData.number_of_volunteers}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
@@ -313,14 +286,17 @@ const Form = () => {
                     <TextField
                         name="deadline"
                         label="Deadline"
-                        value={formData.deadline}
+                        value={props.formData.deadline}
                         onChange={handleChange}
                         fullWidth
                         margin="normal"
                         type="date"
                     />
-                    <Button variant="contained" onClick={handleSubmit} style={{ float: "right" }}>
+                    <Button variant="contained" onClick={handleSubmit} style={{ margin: "5px", float: "right" }}>
                         Submit
+                    </Button>
+                    <Button onClick={AIEnhance} style={{ margin: "5px", float: "right" }}>
+                        AI Enhance
                     </Button>
                 </Box>
             </TabPanel>

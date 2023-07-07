@@ -6,7 +6,25 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Button } from "@mui/material";
 
 const App = () => {
-    const [opportunityContent, setOpportunityContent] = useState("Big baked beans are delicious!");
+    const [opportunityContent, setOpportunityContent] = useState("<em>Start writing!</em>");
+    const [formData, setFormData] = useState({
+        opportunity_type: "",
+        title: "",
+        organisation: "",
+        what_do_you_need_help_with: "",
+        what_do_you_already_have_in_place: "",
+        what_do_you_aim_to_achieve: [""],
+        skill: "",
+        secondary_skills: [""],
+        experience: "",
+        open_to_students: false,
+        number_of_volunteers: "",
+        location: "",
+        cause: "",
+        deadline: "",
+        user: "",
+    });
+
     const [currentTab, setCurrentTab] = useState("1");
     const [performAction, setPerformAction] = useState(false);
 
@@ -27,11 +45,13 @@ const App = () => {
                     <Tab label="Reviewer" value="3" />
                 </Tabs>
             </Box>
-            <TabPanel style={{ padding: 0}} value="1" index={0}>
+            <TabPanel style={{ padding: 0 }} value="1" index={0}>
                 <Form
                     opportunityContent={opportunityContent}
                     setOpportunityContent={setOpportunityContent}
                     performAction={performAction}
+                    formData={formData}
+                    setFormData={setFormData}
                 />
             </TabPanel>
             <TabPanel style={{ padding: 0 }} value="2" index={1}>
