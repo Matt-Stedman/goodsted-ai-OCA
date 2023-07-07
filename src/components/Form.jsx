@@ -295,9 +295,9 @@ const Form = (props) => {
                     <Button variant="contained" onClick={handleSubmit} style={{ margin: "5px", float: "right" }}>
                         Submit
                     </Button>
-                    <Button onClick={AIEnhance} style={{ margin: "5px", float: "right" }}>
+                    {/* <Button onClick={AIEnhance} style={{ margin: "5px", float: "right" }}>
                         AI Enhance
-                    </Button>
+                    </Button> */}
                 </Box>
             </TabPanel>
         </TabContext>

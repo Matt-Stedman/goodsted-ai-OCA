@@ -1,60 +1,73 @@
-﻿# The goodsted-ai_playground
-
-# Ideas
+# OCA - React app
 
 ## AI-driven Opportunity Creation Assistance - OCA
-**Lead**: @matt-stedman
+Lead: [matt-stedman](https://github.com/Matt-Stedman/)
 
-**Why**
+### Why
 Not all opportunities are created equal. Sometimes, good sales of a "less worthy" opportunity will get more volunteers than a poorly sold "urgent and important" opportunity.
 
-**How**
+### How
 Remove "sales-ability" effort from the opportunity posting.
 
-**What**
+### What
 Goodsted simplifies opportunity posting with AI-powered assistance. As users create their opportunity posts, the AI system provides helpful suggestions to enhance the quality and effectiveness of the listings. By reducing the effort required to create compelling posts, Goodsted empowers opportunity posters to focus on the core details that matter, ultimately attracting more volunteers and maximizing the impact of their initiatives.
 
-## Fit indicator - FI
-**Lead**: @satyam3196
+## To run
 
-**Why**
-Tailored (chosen for you!) opportunities don't match on people's real values, skills or interests, simply on buzzwords and more specific but less representative matchings.
+This is a ReactJS Front-end only application.
+To run, first ensure you have `npm` installed, then run `npm run i` to install all dependencies.
 
-**How**
-Use NLP and a deeper understanding of a volunteer's real values, skills, and interests to provide more relevant suggestions based on core beliefs and abilities.
+Once all dependencies are installed you can run `npm run start` to start the service.
 
-**What**
-Goodsted's AI-powered fit indicator algorithm cross-references users' skills, interests, and problem-solving areas with each opportunity, calculating a personalized fit score for every potential match. This hidden process seamlessly presents users with tailored recommendations, ensuring they discover opportunities that align with their preferences and expertise, creating a fluid and personalized experience. I'm also thinking we have a new "recommendation of the day" for each user where the highest fit is presented to them, only one a day (solves the buyer's dilemma issues), and people can rate on the three metrics for each opportunity which likewise feeds the matching algorithms.
+### You will need
 
-## Natural Language Search with NLP - NLS
-**Lead**: @vrushaliashok
+We require an OpenAI API key in the `secrets.js` file. You can generate your own OpenAI api key by signined up on [the Open AI API website](https://openai.com/blog/openai-api).
 
-**Why**
-Search bars don't work well on any site, least of all when it's something as nuanced and emotional as volunteering. 
+Your `secrets.js` file will look like:
+```js
+export const OPEN_AI_API_KEY = "YOUR OPENAI API KEY";
+```
 
-**How**
-Make searching more intuitive and intelligent, releasing the effort/load from the volunteer and instead learning and understanding what the volunteer is really looking for based on previous experiences and NLP.
+## React pre-amble
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-**What**
-Goodsted introduces a user-friendly search feature that utilizes Natural Language Processing (NLP) to match concepts instead of just keywords. This approach makes searching for opportunities more intuitive and precise. Whether it's finding relevant opportunities based on specific preferences or exploring broader themes, the NLP-powered search ensures that users discover opportunities that align with their interests. This feature benefits users across different platforms, from documentation sites to marketplaces, providing a more efficient and concept-focused search experience.
+## Available Scripts
 
-# Notes
-Selin basically said “we want AI” in Goodsted some how, and I think I can help.
-**Biggest problems I face with Goodsted are:**
+In the project directory, you can run:
 
-- No time to help (I think everyone has this problem)
-- I rarely think to go on Goodsted
-- Not many opportunities
-- Difficult to match my genuine interests with what they really need
+### `npm start`
 
-**Misc notes:**
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-- Many opportunities are “Remote” so it’s not too useful of a feature
-- The categories are arbitrary, and I have a pet-peeve against these sort of categories
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-Other ideas for Goodsted:
+### `npm test`
 
-- Swipe interface (like Otta) to give you exposure to one opportunity at a time
-- Spell checking and clarity checking; “You might get more engagement if you phrase it like this”
-- “Start with Why” for every opportunity
-- AI learns what you like based on some review from past opportunities and matches future ones for that “We think you’ll like”
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
