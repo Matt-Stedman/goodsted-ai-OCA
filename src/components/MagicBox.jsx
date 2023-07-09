@@ -256,7 +256,7 @@ const MagicBox = (props) => {
                     disabled={feedbackLoading}
                 >
                     {feedbackLoading ? (
-                        <img src="assets/loading_inline.gif" width="130" height="17" />
+                        <img src={process.env.PUBLIC_URL + "/assets/loading_inline.gif"} width="130" height="17" />
                     ) : displayFeedback().Any ? (
                         "✨ Try again ✨"
                     ) : (
@@ -353,7 +353,7 @@ const MagicBox = (props) => {
                                                         }}
                                                         onClick={() => switchOutTextWrapper(index)}
                                                     >
-                                                        <img src="assets/switch_icon.png" height="10px" />
+                                                        <img src={process.env.PUBLIC_URL + "/assets/switch_icon.png"} height="10px" />
                                                     </button>{" "}
                                                     {item.TO}
                                                 </td>

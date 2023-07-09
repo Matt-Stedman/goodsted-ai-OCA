@@ -21,7 +21,7 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "node -r dotenv/config node_modules/react-scripts/scripts/start.js",
+        "start": "react-scripts start",
         "build": "react-scripts build",
         "predeploy": "npm run build",
         "deploy": "gh-pages -d build",
@@ -47,7 +47,6 @@
         ]
     },
     "devDependencies": {
-        "gh-pages": "^4.0.0",
-        "dotenv": "^16.3.1"
+        "gh-pages": "^4.0.0"
     }
 }

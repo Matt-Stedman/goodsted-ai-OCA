@@ -37,34 +37,42 @@ const App = () => {
     };
 
     return (
-        <TabContext value={currentTab}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs value={currentTab} onChange={handleTabChange}>
-                    <Tab label="Creator" value="1" />
-                    <Tab label="Editor" value="2" />
-                    <Tab label="Reviewer" value="3" />
-                </Tabs>
-            </Box>
-            <TabPanel style={{ padding: 0 }} value="1" index={0}>
-                <Form
-                    opportunityContent={opportunityContent}
-                    setOpportunityContent={setOpportunityContent}
-                    performAction={performAction}
-                    formData={formData}
-                    setFormData={setFormData}
-                />
-            </TabPanel>
-            <TabPanel style={{ padding: 0 }} value="2" index={1}>
-                <OpportunityEditor
-                    opportunityContent={opportunityContent}
-                    setOpportunityContent={setOpportunityContent}
-                    performAction={performAction}
-                />
-            </TabPanel>
-            <TabPanel style={{ padding: 0 }} value="3" index={2}>
-                Coming soon, wait for my video tomorrow 😉
-            </TabPanel>
-        </TabContext>
+        <>
+            <span style={{ display: "flex", alignItems: "center"}}>
+                <img src={process.env.PUBLIC_URL + "/assets/GAI logo.png"} height={50} alt="Switch Icon" />
+                <h2 style={{ fontFamily: "Jaldi, Arial", paddingLeft: "20px" }}>Goodsted AI</h2>
+                <h1 style={{ fontFamily: "Jaldi, Arial", paddingLeft: "20px" }}>Opportunity Creation Assitance</h1>
+            </span>
+
+            <TabContext value={currentTab}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs value={currentTab} onChange={handleTabChange}>
+                        <Tab label="Creator" value="1" />
+                        <Tab label="Editor" value="2" />
+                        <Tab label="Reviewer" value="3" />
+                    </Tabs>
+                </Box>
+                <TabPanel style={{ padding: 0 }} value="1" index={0}>
+                    <Form
+                        opportunityContent={opportunityContent}
+                        setOpportunityContent={setOpportunityContent}
+                        performAction={performAction}
+                        formData={formData}
+                        setFormData={setFormData}
+                    />
+                </TabPanel>
+                <TabPanel style={{ padding: 0 }} value="2" index={1}>
+                    <OpportunityEditor
+                        opportunityContent={opportunityContent}
+                        setOpportunityContent={setOpportunityContent}
+                        performAction={performAction}
+                    />
+                </TabPanel>
+                <TabPanel style={{ padding: 0 }} value="3" index={2}>
+                    Coming soon, wait for my video tomorrow 😉
+                </TabPanel>
+            </TabContext>
+        </>
     );
 };
 
