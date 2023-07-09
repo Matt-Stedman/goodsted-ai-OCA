@@ -1,4 +1,5 @@
 import { Button, TextField, Box, MenuItem } from "@mui/material";
+import EnhancedTextField from "./components/EnhancedTextField";
 
 const causeOptions = [
     "Animal Welfare",
@@ -32,10 +33,10 @@ const WhatDoYouNeedHelpWith = (props) => {
                 name="opportunity_type"
                 label="What do you need help with?"
                 select
-                value={props.formData.opportunity_type}
-                onChange={props.handleChange}
                 fullWidth
+                value={props.formData.opportunity_type}
                 margin="normal"
+                onChange={props.handleChange}
             >
                 {["Mentoring", "Task", "Brainstorming", "Activity"].map((cause) => (
                     <MenuItem key={cause} value={cause}>
@@ -47,10 +48,10 @@ const WhatDoYouNeedHelpWith = (props) => {
                 name="cause"
                 label="What cause is this evolving?"
                 select
+                fullWidth 
+                margin="normal"
                 value={props.formData.cause}
                 onChange={props.handleChange}
-                fullWidth
-                margin="normal"
             >
                 {causeOptions.map((cause) => (
                     <MenuItem key={cause} value={cause}>
@@ -58,7 +59,7 @@ const WhatDoYouNeedHelpWith = (props) => {
                     </MenuItem>
                 ))}
             </TextField>
-            {props.myButton}
+            {props.childElements}
         </Box>
     );
 };

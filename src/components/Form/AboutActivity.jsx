@@ -1,23 +1,24 @@
 import { Button, Grid, Checkbox, FormControlLabel, TextField, Box, MenuItem } from "@mui/material";
+import EnhancedTextField from "./components/EnhancedTextField";
 
 const AboutActivity = (props) => {
     return (
         <Box sx={{ width: "50%", flexDirection: "column" }}>
-            <TextField
+            <EnhancedTextField
                 name="title"
                 label="What is your opportunity title?"
                 value={props.formData.title}
+                enhanced={props.enhancedFormData.title}
                 onChange={props.handleChange}
                 fullWidth
-                margin="normal"
             />
             <TextField
                 name="organisation"
                 label="What organisation is leading this opportunity?"
-                select
                 value={props.formData.organisation}
                 onChange={props.handleChange}
                 fullWidth
+                select
                 margin="normal"
             >
                 {["dummy org"].map((org) => (
@@ -26,51 +27,51 @@ const AboutActivity = (props) => {
                     </MenuItem>
                 ))}
             </TextField>
-            <TextField
-                name="what_do_you_need_help_with"
+            <EnhancedTextField
+                name="whatDoYouNeedHelpWith"
                 label="What do you need help with?"
-                value={props.formData.what_do_you_need_help_with}
+                value={props.formData.whatDoYouNeedHelpWith}
                 onChange={props.handleChange}
+                enhanced={props.enhancedFormData.whatDoYouNeedHelpWith}
                 fullWidth
                 multiline
                 rows={4}
-                margin="normal"
             />
-            <TextField
-                name="what_do_you_already_have_in_place"
+            <EnhancedTextField
+                name="whatDoYouAlreadyHaveInPlace"
                 label="What do you already have in place?"
-                value={props.formData.what_do_you_already_have_in_place}
+                value={props.formData.whatDoYouAlreadyHaveInPlace}
                 onChange={props.handleChange}
+                enhanced={props.enhancedFormData.whatDoYouAlreadyHaveInPlace}
                 fullWidth
                 multiline
                 rows={4}
-                margin="normal"
             />
             <div>
-                {props.formData.what_do_you_aim_to_achieve.map((goal, index) => (
-                    <TextField
-                        name="what_do_you_aim_to_achieve"
+                {props.formData.whatDoYouAimToAchieve.map((goal, index) => (
+                    <EnhancedTextField
+                        name="whatDoYouAimToAchieve"
                         label={`What ${index === 0 ? "" : "else"} do you aim to achieve?`}
-                        value={props.formData.what_do_you_aim_to_achieve[index]}
+                        value={props.formData.whatDoYouAimToAchieve[index]}
                         onChange={(e) => {
                             const { name, value } = e.target;
                             props.setFormData((prevData) => ({
                                 ...prevData,
-                                what_do_you_aim_to_achieve: prevData.what_do_you_aim_to_achieve.map((item, i) =>
+                                whatDoYouAimToAchieve: prevData.whatDoYouAimToAchieve.map((item, i) =>
                                     i === index ? value : item
                                 ),
                             }));
                         }}
+                        enhanced={props.enhancedFormData.whatDoYouAimToAchieve?.[index]}
                         fullWidth
-                        margin="normal"
-                        key={"what_do_you_aim_to_achieve_" + index}
+                        key={"whatDoYouAimToAchieve_" + index}
                     />
                 ))}
                 <Button
                     onClick={() => {
                         props.setFormData((prevData) => ({
                             ...prevData,
-                            what_do_you_aim_to_achieve: [...prevData.what_do_you_aim_to_achieve, ""],
+                            whatDoYouAimToAchieve: [...prevData.whatDoYouAimToAchieve, ""],
                         }));
                     }}
                     style={{ fontSize: "0.7em" }}
@@ -79,7 +80,7 @@ const AboutActivity = (props) => {
                 </Button>
             </div>
             <Grid item xs={12}></Grid>
-            {props.myButton}
+            {props.childElements}
         </Box>
     );
 };

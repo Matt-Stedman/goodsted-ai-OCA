@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Grid, Checkbox, FormControlLabel, TextField, Box, MenuItem } from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
-import { createOpportunityFromForm } from "../functions/OpenAi";
+import { createOpportunityFromForm, fillinTheRestOfForm } from "../functions/OpenAi";
 import WhatDoYouNeedHelpWith from "./Form/WhatDoYouNeedHelpWith";
 import AboutActivity from "./Form/AboutActivity";
 import AboutSupporters from "./Form/AboutSupporters";
@@ -10,6 +10,8 @@ import AboutSupporters from "./Form/AboutSupporters";
 const Form = (props) => {
     const [currentTab, setCurrentTab] = useState("1");
     const [performAction, setPerformAction] = useState(false);
+    const [enhancedFormData, setEnhancedFormData] = useState({});
+    const [enhancementLoading, setEnhancementLoading] = useState(false);
 
     /**
      * Handle the changing of form data
@@ -34,7 +36,22 @@ const Form = (props) => {
         });
     };
 
-    const AIEnhance = () => {};
+    const AIEnhance = async () => {
+        setEnhancementLoading(true);
+        console.log(props.formData);
+        await fillinTheRestOfForm(props.formData)
+            .then((returnedForm) => {
+                if (returnedForm) {
+                    setEnhancedFormData(returnedForm);
+                    console.log("Reviewed form content: ", returnedForm);
+                } else {
+                    console.log("Error passing form content!");
+                }
+            })
+            .finally(() => {
+                setEnhancementLoading(false);
+            });
+    };
 
     /**
      * Handle the changing of tabs
@@ -59,13 +76,14 @@ const Form = (props) => {
             <TabPanel style={{ padding: 10, display: "flex", justifyContent: "center" }} value="1">
                 <WhatDoYouNeedHelpWith
                     formData={props.formData}
+                    setFormData={props.setFormData}
+                    enhancedFormData={enhancedFormData}
                     handleChange={handleChange}
-                    handleTabChange={handleTabChange}
-                    myButton={
+                    childElements={
                         <Button
                             variant="contained"
                             onClick={() => {
-                                props.handleTabChange(null, "2");
+                                handleTabChange(null, "2");
                             }}
                             style={{ float: "right" }}
                         >
@@ -77,13 +95,14 @@ const Form = (props) => {
             <TabPanel style={{ padding: 10, display: "flex", justifyContent: "center" }} value="2">
                 <AboutActivity
                     formData={props.formData}
+                    setFormData={props.setFormData}
+                    enhancedFormData={enhancedFormData}
                     handleChange={handleChange}
-                    handleTabChange={handleTabChange}
-                    myButton={
+                    childElements={
                         <Button
                             variant="contained"
                             onClick={() => {
-                                props.handleTabChange(null, "3");
+                                handleTabChange(null, "3");
                             }}
                             style={{ float: "right" }}
                         >
@@ -95,12 +114,27 @@ const Form = (props) => {
             <TabPanel style={{ padding: 10, display: "flex", justifyContent: "center" }} value="3">
                 <AboutSupporters
                     formData={props.formData}
+                    setFormData={props.setFormData}
+                    enhancedFormData={enhancedFormData}
                     handleChange={handleChange}
-                    handleTabChange={handleTabChange}
-                    myButton={
-                        <Button variant="contained" onClick={handleSubmit} style={{ float: "right" }}>
-                            Submit
-                        </Button>
+                    childElements={
+                        <div>
+                            <Button variant="contained" onClick={handleSubmit} style={{ float: "right" }}>
+                                Submit
+                            </Button>
+                            {enhancementLoading ? (
+                                <img
+                                    src={process.env.PUBLIC_URL + "/assets/loading_inline.gif"}
+                                    width="152.5"
+                                    height="36.5"
+                                    style={{ float: "right" }}
+                                />
+                            ) : (
+                                <Button onClick={AIEnhance} style={{ float: "right" }}>
+                                    ✨ AI Enhance ✨
+                                </Button>
+                            )}
+                        </div>
                     }
                 />
             </TabPanel>

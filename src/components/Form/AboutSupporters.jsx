@@ -1,41 +1,40 @@
 import { Button, Grid, Checkbox, FormControlLabel, TextField, Box, MenuItem } from "@mui/material";
+import EnhancedTextField from "./components/EnhancedTextField";
 
 const AboutSupporters = (props) => {
     return (
         <Box sx={{ width: "50%", flexDirection: "column" }}>
-            <TextField
+            <EnhancedTextField
                 name="skill"
                 label="What main skill is required to help you with this request?"
                 value={props.formData.skill}
+                enhanced={props.enhancedFormData.skill}
                 onChange={props.handleChange}
-                fullWidth
-                margin="normal"
             />
             <div>
-                {props.formData.secondary_skills.map((goal, index) => (
-                    <TextField
-                        name="secondary_skills"
+                {props.formData.secondarySkills.map((goal, index) => (
+                    <EnhancedTextField
+                        name="secondarySkills"
                         label={`What other skills would be helpful to have?`}
-                        value={props.formData.secondary_skills[index]}
+                        value={props.formData.secondarySkills[index]}
+                        enhanced={props.enhancedFormData.secondarySkills?.[index]}
                         onChange={(e) => {
                             const { name, value } = e.target;
                             props.setFormData((prevData) => ({
                                 ...prevData,
-                                secondary_skills: prevData.secondary_skills.map((item, i) =>
+                                secondarySkills: prevData.secondarySkills.map((item, i) =>
                                     i === index ? value : item
                                 ),
                             }));
                         }}
-                        fullWidth
-                        margin="normal"
-                        key={"secondary_skills_" + index}
+                        key={"secondarySkills_" + index}
                     />
                 ))}
                 <Button
                     onClick={() => {
                         props.setFormData((prevData) => ({
                             ...prevData,
-                            secondary_skills: [...prevData.secondary_skills, ""],
+                            secondarySkills: [...prevData.secondarySkills, ""],
                         }));
                     }}
                     style={{ fontSize: "0.7em" }}
@@ -67,6 +66,7 @@ const AboutSupporters = (props) => {
                 name="number_of_volunteers"
                 label="How many volunteers are needed?"
                 value={props.formData.number_of_volunteers}
+                enhanced={props.enhancedFormData.number_of_volunteers}
                 onChange={props.handleChange}
                 fullWidth
                 margin="normal"
@@ -81,7 +81,7 @@ const AboutSupporters = (props) => {
                 margin="normal"
                 type="date"
             />
-            {props.myButton}
+            {props.childElements}
         </Box>
     );
 };

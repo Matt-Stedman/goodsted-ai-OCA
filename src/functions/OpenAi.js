@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 const apiClient = axios.create({
@@ -104,13 +103,13 @@ export async function createOpportunityFromForm(form_data) {
         THIS IS THE DATA:
         
         *What do we want to achieve?*
-        ${form_data.what_do_you_aim_to_achieve}
+        ${form_data.whatDoYouAimToAchieve}
         
         *What do we need help with?*
-        ${form_data.what_do_you_need_help_with}
+        ${form_data.whatDoYouNeedHelpWith}
         
         *What do we already have in place?*
-        ${form_data.what_do_you_already_have_in_place}
+        ${form_data.whatDoYouAlreadyHaveInPlace}
 
         
         *Meta data*
@@ -119,7 +118,7 @@ export async function createOpportunityFromForm(form_data) {
         Cause: ${form_data.cause}
         Deadline: ${form_data.deadline}
         Skills: ${form_data.skill}
-        Secondary Skills: ${form_data.secondary_skills.map((skill) => skill).join(", ")}
+        Secondary Skills: ${form_data.secondarySkills.map((skill) => skill).join(", ")}
         Poster: ${form_data.user}
         Organisation: ${form_data.organisation}
         Experience Required: ${form_data.experience}
@@ -137,20 +136,91 @@ export async function createOpportunityFromForm(form_data) {
 }
 
 /**
- * Function to get feedback on updates
+ * Function to create a posting given a form response
  */
-export async function getFeedbackOnUpdate(currentOpportunity, pastOpportunities) {
-    let pastOps = "";
-    pastOpportunities.forEach((op) => {
-        pastOps += `'${op}', `;
-    });
+export async function fillinTheRestOfForm(raw_form_data) {
+    const form_data = {};
 
-    const prompt = `The current volunteer opportunity is '${currentOpportunity}'. Past opportunities are ${pastOps}. Please provide feedback on the current opportunity, taking into consideration the past opportunities.`;
+    for (const key in raw_form_data) {
+        if (Object.prototype.hasOwnProperty.call(raw_form_data, key)) {
+            const value = raw_form_data[key];
+            if (typeof value === "string") {
+                form_data[key] = value.replace(/"/g, "'").replace(/\n/g, " ");
+            } else {
+                form_data[key] = value;
+            }
+        }
+    }
 
+    const prompt = `
+I am writing a volunteering opportunity.
+Given the below form, fill in any and all missing values as best as you can (including any secondary skills and prior experience you feel could be useful), and re-write fields you feel are unclear.
+Be succinct, clear, concise, and human-friendly.
+You must return ONLY a JSON-parsible response!
+{
+    "whatDoYouAimToAchieve":  [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
+    "whatDoYouNeedHelpWith": "${form_data.whatDoYouNeedHelpWith}",
+    "whatDoYouAlreadyHaveInPlace": "${form_data.whatDoYouAlreadyHaveInPlace}",
+    "location": "${form_data.location}",
+    "title": "${form_data.title}",
+    "cause": "${form_data.cause}",
+    "deadline": "${form_data.deadline}",
+    "skill": "${form_data.skill}",
+    "secondarySkills": [${form_data.secondarySkills.map((skill) => `"${skill}"`).join(", ")}],
+    "user": "${form_data.user}",
+    "experience": "${form_data.experience}"
+}
+        `;
+
+    /*
+        ${
+            form_data.organisation
+                ? ` For context, I have also included information about the enterprise here, which you can use if it helps (but do not report anything back for this): 
+            {${form_data.organisation}}`
+                : ""
+        }
+        */
+    console.log(prompt);
     const response = await apiClient.post("/chat/completions", {
-        prompt,
-        max_tokens: 60,
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-4",
     });
 
-    return response.data.choices[0].text;
+    console.log(response);
+    let content = response.data.choices[0].message.content;
+    try {
+        // Find the start and end indices of the JSON-parsable region
+        const startIndex = content.indexOf("{");
+        const endIndex = content.lastIndexOf("}");
+
+        if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+            throw new Error("JSON-parsable region not found");
+        }
+
+        // Extract the JSON-parsable region
+        const jsonContent = content.substring(startIndex, endIndex + 1);
+
+        // Parse the extracted JSON content
+        const formContent = JSON.parse(jsonContent);
+
+        // Perform any additional processing or logic here
+
+        // Return the extracted fields or perform any other desired operations
+        return {
+            whatDoYouAimToAchieve: formContent.whatDoYouAimToAchieve,
+            whatDoYouNeedHelpWith: formContent.whatDoYouNeedHelpWith,
+            whatDoYouAlreadyHaveInPlace: formContent.whatDoYouAlreadyHaveInPlace,
+            location: formContent.location,
+            title: formContent.title,
+            cause: formContent.cause,
+            deadline: formContent.deadline,
+            skill: formContent.skill,
+            secondarySkills: formContent.secondarySkills,
+            user: formContent.user,
+            experience: formContent.experience,
+        };
+    } catch (error) {
+        console.error("Error parsing form content:", error);
+        return null;
+    }
 }
