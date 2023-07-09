@@ -52,7 +52,7 @@ const App = () => {
                         <Tab label="Reviewer" value="3" />
                     </Tabs>
                 </Box>
-                <TabPanel style={{ padding: 0 }} value="1" index={0}>
+                <TabPanel style={{ padding: 0, alignContent: "center"}} value="1" index={0}>
                     <Form
                         opportunityContent={opportunityContent}
                         setOpportunityContent={setOpportunityContent}
