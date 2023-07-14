@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "../styles/Magic.css";
+import "../../styles/Magic.css";
 import {
     reviewEntireOpportunityGenerally,
     reviewEntireOpportunityAgainstChecklist,
     checklist,
-} from "../functions/OpenAi";
+} from "../../functions/OpenAi";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
 

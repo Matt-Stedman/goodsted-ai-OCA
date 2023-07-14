@@ -11,11 +11,11 @@ const App = () => {
         opportunity_type: "",
         title: "",
         organisation: "",
-        what_do_you_need_help_with: "",
-        what_do_you_already_have_in_place: "",
-        what_do_you_aim_to_achieve: [""],
+        whatDoYouNeedHelpWith: "",
+        whatDoYouAlreadyHaveInPlace: "",
+        whatDoYouAimToAchieve: [""],
         skill: "",
-        secondary_skills: [""],
+        secondarySkills: [""],
         experience: "",
         open_to_students: false,
         number_of_volunteers: "",
@@ -52,7 +52,7 @@ const App = () => {
                         <Tab label="Reviewer" value="3" />
                     </Tabs>
                 </Box>
-                <TabPanel style={{ padding: 0 }} value="1" index={0}>
+                <TabPanel style={{ padding: 0, alignContent: "center"}} value="1" index={0}>
                     <Form
                         opportunityContent={opportunityContent}
                         setOpportunityContent={setOpportunityContent}

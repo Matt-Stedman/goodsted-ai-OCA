@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import MagicBox from "./MagicBox";
+import MagicBox from "./OpportunityEditor/MagicBox";
 import DOMPurify from "dompurify";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
