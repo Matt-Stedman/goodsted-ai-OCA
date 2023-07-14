@@ -6,7 +6,6 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Button } from "@mui/material";
 
 const App = () => {
-    const [opportunityContent, setOpportunityContent] = useState("<em>Start writing!</em>");
     const [formData, setFormData] = useState({
         opportunity_type: "",
         title: "",
@@ -24,6 +23,11 @@ const App = () => {
         deadline: "",
         user: "",
     });
+    const [content, setContent] = useState({
+        image: "",
+        opportunityContent: "<em>Start writing!</em>",
+        linkedIn: "",
+    });
 
     const [currentTab, setCurrentTab] = useState("1");
     const [performAction, setPerformAction] = useState(false);
@@ -38,7 +42,7 @@ const App = () => {
 
     return (
         <>
-            <span style={{ display: "flex", alignItems: "center"}}>
+            <span style={{ display: "flex", alignItems: "center" }}>
                 <img src={process.env.PUBLIC_URL + "/assets/GAI logo.png"} height={50} alt="Switch Icon" />
                 <h2 style={{ fontFamily: "Jaldi, Arial", paddingLeft: "20px" }}>Goodsted AI</h2>
                 <h1 style={{ fontFamily: "Jaldi, Arial", paddingLeft: "20px" }}>Opportunity Creation Assitance</h1>
@@ -52,10 +56,12 @@ const App = () => {
                         <Tab label="Reviewer" value="3" />
                     </Tabs>
                 </Box>
-                <TabPanel style={{ padding: 0, alignContent: "center"}} value="1" index={0}>
+                <TabPanel style={{ padding: 0, alignContent: "center" }} value="1" index={0}>
                     <Form
-                        opportunityContent={opportunityContent}
-                        setOpportunityContent={setOpportunityContent}
+                        opportunityContent={content.opportunityContent}
+                        setOpportunityContent={(new_opportunityContent) => {
+                            setContent({ ...content, opportunityContent: new_opportunityContent });
+                        }}
                         performAction={performAction}
                         formData={formData}
                         setFormData={setFormData}
@@ -63,8 +69,10 @@ const App = () => {
                 </TabPanel>
                 <TabPanel style={{ padding: 0 }} value="2" index={1}>
                     <OpportunityEditor
-                        opportunityContent={opportunityContent}
-                        setOpportunityContent={setOpportunityContent}
+                        opportunityContent={content.opportunityContent}
+                        setOpportunityContent={(new_opportunityContent) => {
+                            setContent({ ...content, opportunityContent: new_opportunityContent });
+                        }}
                         performAction={performAction}
                     />
                 </TabPanel>

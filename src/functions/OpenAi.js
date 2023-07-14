@@ -1,7 +1,17 @@
 import axios from "axios";
 
-const apiClient = axios.create({
+const chatGPTClient = axios.create({
     baseURL: "https://europe-west1-goodsted-ai.cloudfunctions.net/chatProxy",
+    headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type",
+    },
+});
+
+const imageClient = axios.create({
+    baseURL: "https://europe-west1-goodsted-ai.cloudfunctions.net/imageProxy",
     headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -21,7 +31,7 @@ export async function reviewEntireOpportunityGenerally(opportunity) {
         The opportunity is:
         '${opportunity}'`;
 
-    const response = await apiClient.post("/", {
+    const response = await chatGPTClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
         max_tokens: 100,
@@ -75,7 +85,7 @@ export async function reviewEntireOpportunityAgainstChecklist(opportunity) {
 
         The opportunity is: '${opportunity}'`;
 
-    const response = await apiClient.post("/", {
+    const response = await chatGPTClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
     });
@@ -127,7 +137,7 @@ export async function createOpportunityFromForm(form_data) {
         Experience Required: ${form_data.experience}
         `;
 
-    const response = await apiClient.post("/", {
+    const response = await chatGPTClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
     });
@@ -184,7 +194,7 @@ You must return ONLY a JSON-parsible response!
         }
         */
     console.log(prompt);
-    const response = await apiClient.post("/", {
+    const response = await chatGPTClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-4",
     });
@@ -226,4 +236,59 @@ You must return ONLY a JSON-parsible response!
         console.error("Error parsing form content:", error);
         return null;
     }
+}
+
+/**
+ * Function to create a prompt given form data
+ */
+export async function createImagePromptFromForm(raw_form_data) {
+    const form_data = {};
+
+    for (const key in raw_form_data) {
+        if (Object.prototype.hasOwnProperty.call(raw_form_data, key)) {
+            const value = raw_form_data[key];
+            if (typeof value === "string") {
+                form_data[key] = value.replace(/"/g, "'").replace(/\n/g, " ");
+            } else {
+                form_data[key] = value;
+            }
+        }
+    }
+
+    const prompt = `
+        Write me a prompt for Dall E 2 of no more than 20 words that can generate an exciting image that summarizes this opportunity post: 
+    
+        What we want to achieve:  [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
+        What we need help with: "${form_data.whatDoYouNeedHelpWith}",
+        Location: "${form_data.location}",
+        Title: "${form_data.title}",
+        Cause: "${form_data.cause}",
+        Main Skill: "${form_data.skill}",
+        `;
+
+    const response = await chatGPTClient.post("/", {
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-3.5-turbo",
+    });
+
+    console.log(response);
+    let content = response.data.choices[0].message.content;
+    return content.replace(/["':]/g, "");
+}
+
+/**
+ * Function to create a images given a prompt
+ */
+export async function createImageGivenOpportunity(prompt_used) {
+    if (!prompt_used) {
+        return null;
+    }
+    const response = await imageClient.post("/", {
+        prompt: prompt_used,
+        n: 4,
+        size: "1024x1024",
+    });
+
+    console.log(response);
+    return response.data.data;
 }

@@ -79,7 +79,6 @@ const AboutActivity = (props) => {
                     Add a goal
                 </Button>
             </div>
-            <Grid item xs={12}></Grid>
             {props.childElements}
         </Box>
     );
