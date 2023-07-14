@@ -13,7 +13,7 @@ const EnhancedTextField = (props) => {
                 {...props}
                 fullWidth
             />
-            {props.enhanced !== props.value && (
+            {props.enhanced !== props.value && props.enhanced && (
                 <div
                     style={{
                         position: "absolute",
