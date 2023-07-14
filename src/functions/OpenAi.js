@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: "https://chatapi.free.beeceptor.com/v1",
+    baseURL: "https://europe-west1-goodsted-ai.cloudfunctions.net/chatProxy",
     headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type",
     },
 });
 
@@ -18,7 +21,7 @@ export async function reviewEntireOpportunityGenerally(opportunity) {
         The opportunity is:
         '${opportunity}'`;
 
-    const response = await apiClient.post("/chat/completions", {
+    const response = await apiClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
         max_tokens: 100,
@@ -72,7 +75,7 @@ export async function reviewEntireOpportunityAgainstChecklist(opportunity) {
 
         The opportunity is: '${opportunity}'`;
 
-    const response = await apiClient.post("/chat/completions", {
+    const response = await apiClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
     });
@@ -124,7 +127,7 @@ export async function createOpportunityFromForm(form_data) {
         Experience Required: ${form_data.experience}
         `;
 
-    const response = await apiClient.post("/chat/completions", {
+    const response = await apiClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-3.5-turbo",
     });
@@ -181,7 +184,7 @@ You must return ONLY a JSON-parsible response!
         }
         */
     console.log(prompt);
-    const response = await apiClient.post("/chat/completions", {
+    const response = await apiClient.post("/", {
         messages: [{ role: "user", content: prompt }],
         model: "gpt-4",
     });
