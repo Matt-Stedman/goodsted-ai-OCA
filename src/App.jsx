@@ -71,6 +71,7 @@ const App = () => {
                             setContent({ ...content, linkedInContent: new_linkedInContent });
                         }}
                         performAction={performAction}
+                        setPerformAction={setPerformAction}
                         formData={formData}
                         setFormData={setFormData}
                     />

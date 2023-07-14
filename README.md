@@ -19,6 +19,11 @@ To run, first ensure you have `npm` installed, then run `npm run i` to install a
 
 Once all dependencies are installed you can run `npm run start` to start the service.
 
+## Backend
+
+We don't have a backend per-se, all queries are stored within the [OpenAI Functions](./src/functions/OpenAi.js), with OpenAI rendering all the results in their API.
+We do have a Google Cloud Function running as a Proxy to provide unrestricted access to this front end (otherwise we'll cause OpenAI API Key leaks), which is super not secure!, but works for now (and is at least limited in cost!).
+
 ### You will need
 
 We require an OpenAI API key in the `secrets.js` file. You can generate your own OpenAI api key by signined up on [the Open AI API website](https://openai.com/blog/openai-api).
