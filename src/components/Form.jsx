@@ -14,6 +14,7 @@ const Form = (props) => {
     const [performAction, setPerformAction] = useState(false);
     const [enhancedFormData, setEnhancedFormData] = useState({});
     const [enhancementLoading, setEnhancementLoading] = useState(false);
+    const [opportunityContentLoading, setOpportunityContentLoading] = useState(false);
 
     /**
      * Handle the changing of form data
@@ -32,10 +33,16 @@ const Form = (props) => {
     const handleSubmit = async () => {
         // Do something with the form data
         console.log(props.formData);
-        await createOpportunityFromForm(props.formData).then((content) => {
-            props.setOpportunityContent(content);
-            console.log("Opportunity Content set to: ", content);
-        });
+        setOpportunityContentLoading(true);
+
+        await createOpportunityFromForm(props.formData)
+            .then((content) => {
+                props.setOpportunityContent(content);
+                console.log("Opportunity Content set to: ", content);
+            })
+            .finally(() => {
+                setOpportunityContentLoading(false);
+            });
     };
 
     const AIEnhance = async () => {
@@ -74,6 +81,13 @@ const Form = (props) => {
                     <Tab label="About Activity" value="2" />
                     <Tab label="About supporters" value="3" />
                     <Tab label="Auto Generated" value="4" />
+                    <MagicButton
+                        variant="contained"
+                        onClick={handleSubmit}
+                        loading={opportunityContentLoading}
+                        style={{ margin: "8px", float: "right" }}
+                        text="Send to editor"
+                    />
                 </Tabs>
             </Box>
             <TabPanel style={{ padding: 10, display: "flex", justifyContent: "center" }} value="1">
@@ -168,13 +182,6 @@ const Form = (props) => {
                     setLinkedInContent={props.setLinkedInContent}
                     enhancedFormData={enhancedFormData}
                     handleChange={handleChange}
-                    childElements={
-                        <div>
-                            <Button variant="contained" onClick={handleSubmit} style={{ float: "right" }}>
-                                Submit
-                            </Button>
-                        </div>
-                    }
                 />
             </TabPanel>
         </TabContext>

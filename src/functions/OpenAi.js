@@ -20,6 +20,21 @@ const imageClient = axios.create({
     },
 });
 
+const sterilizeFormData = (raw_form_data) => {
+    let form_data = {};
+    for (const key in raw_form_data) {
+        if (Object.prototype.hasOwnProperty.call(raw_form_data, key)) {
+            const value = raw_form_data[key];
+            if (typeof value === "string") {
+                form_data[key] = value.replace(/"/g, "'").replace(/\n/g, " ");
+            } else {
+                form_data[key] = value;
+            }
+        }
+    }
+    return form_data;
+};
+
 /**
  * Function to create general feedback for the entire posting
  */
@@ -99,7 +114,9 @@ export async function reviewEntireOpportunityAgainstChecklist(opportunity) {
 /**
  * Function to create a posting given a form response
  */
-export async function createOpportunityFromForm(form_data) {
+export async function createOpportunityFromForm(raw_form_data) {
+    const form_data = sterilizeFormData(raw_form_data);
+
     const prompt = `
         I am writing a volunteering opportunity.
         Please convert the following bulletpoints (at the end of my message, under THIS IS THE DATA), not including their description:
@@ -152,18 +169,7 @@ export async function createOpportunityFromForm(form_data) {
  * Function to create a posting given a form response
  */
 export async function fillinTheRestOfForm(raw_form_data) {
-    const form_data = {};
-
-    for (const key in raw_form_data) {
-        if (Object.prototype.hasOwnProperty.call(raw_form_data, key)) {
-            const value = raw_form_data[key];
-            if (typeof value === "string") {
-                form_data[key] = value.replace(/"/g, "'").replace(/\n/g, " ");
-            } else {
-                form_data[key] = value;
-            }
-        }
-    }
+    const form_data = sterilizeFormData(raw_form_data);
 
     const prompt = `
 I am writing a volunteering opportunity.
@@ -239,21 +245,46 @@ You must return ONLY a JSON-parsible response!
 }
 
 /**
+ * Function to create a posting given a form response
+ */
+export async function createLinkedInPostFromForm(raw_form_data) {
+    const form_data = sterilizeFormData(raw_form_data);
+
+    const prompt = `
+        I am writing a volunteering opportunity, and now I need you to make me a friendly and exciting LinkedIn post.
+        You must:
+        1. Use emojis, because this is a friendly post
+        2. Keep it succinct (~100 words)! No one wants to read a long LinkedIn post.
+        3. Have a call to action, we want people to sign up to this opportunity!
+        4. Sound like a friendly human, we're inspiring strangers to join us!
+
+        Write this LinkedIn post considering the following opportunity notes:
+        
+        What we want to achieve:  [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
+        What we need help with: "${form_data.whatDoYouNeedHelpWith}",
+        Location: "${form_data.location}",
+        Title: "${form_data.title}",
+        Cause: "${form_data.cause}",
+        Main Skill: "${form_data.skill}",
+        Deadline: "${form_data.deadline}"
+        `;
+
+    const response = await chatGPTClient.post("/", {
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-3.5-turbo",
+    });
+
+    console.log(response);
+    let content = response.data.choices[0].message.content;
+
+    return content;
+}
+
+/**
  * Function to create a prompt given form data
  */
 export async function createImagePromptFromForm(raw_form_data) {
-    const form_data = {};
-
-    for (const key in raw_form_data) {
-        if (Object.prototype.hasOwnProperty.call(raw_form_data, key)) {
-            const value = raw_form_data[key];
-            if (typeof value === "string") {
-                form_data[key] = value.replace(/"/g, "'").replace(/\n/g, " ");
-            } else {
-                form_data[key] = value;
-            }
-        }
-    }
+    const form_data = sterilizeFormData(raw_form_data);
 
     const prompt = `
         Write me a prompt for Dall E 2 of no more than 20 words that can generate an exciting image that summarizes this opportunity post: 
