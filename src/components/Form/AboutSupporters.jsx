@@ -48,7 +48,7 @@ const AboutSupporters = (props) => {
                 select
                 value={props.formData.experience}
                 onChange={props.handleChange}
-                fullWidth
+                fullWidth={true}
                 margin="normal"
             >
                 {["No experience needed", "Beginner", "Intermediate", "Expert"].map((cause) => (
@@ -68,7 +68,7 @@ const AboutSupporters = (props) => {
                 value={props.formData.number_of_volunteers}
                 enhanced={props.enhancedFormData.number_of_volunteers}
                 onChange={props.handleChange}
-                fullWidth
+                fullWidth={true}
                 margin="normal"
                 type="number"
             />
@@ -77,7 +77,7 @@ const AboutSupporters = (props) => {
                 label="Deadline"
                 value={props.formData.deadline}
                 onChange={props.handleChange}
-                fullWidth
+                fullWidth={true}
                 margin="normal"
                 type="date"
             />

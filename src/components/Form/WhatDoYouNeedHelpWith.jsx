@@ -33,7 +33,7 @@ const WhatDoYouNeedHelpWith = (props) => {
                 name="opportunity_type"
                 label="What do you need help with?"
                 select
-                fullWidth
+                fullWidth={true}
                 value={props.formData.opportunity_type}
                 margin="normal"
                 onChange={props.handleChange}
@@ -48,7 +48,7 @@ const WhatDoYouNeedHelpWith = (props) => {
                 name="cause"
                 label="What cause is this evolving?"
                 select
-                fullWidth 
+                fullWidth={true} 
                 margin="normal"
                 value={props.formData.cause}
                 onChange={props.handleChange}

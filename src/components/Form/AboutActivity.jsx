@@ -10,14 +10,13 @@ const AboutActivity = (props) => {
                 value={props.formData.title}
                 enhanced={props.enhancedFormData.title}
                 onChange={props.handleChange}
-                fullWidth
             />
             <TextField
                 name="organisation"
                 label="What organisation is leading this opportunity?"
                 value={props.formData.organisation}
                 onChange={props.handleChange}
-                fullWidth
+                fullWidth={true}
                 select
                 margin="normal"
             >
@@ -33,7 +32,6 @@ const AboutActivity = (props) => {
                 value={props.formData.whatDoYouNeedHelpWith}
                 onChange={props.handleChange}
                 enhanced={props.enhancedFormData.whatDoYouNeedHelpWith}
-                fullWidth
                 multiline
                 rows={4}
             />
@@ -43,7 +41,6 @@ const AboutActivity = (props) => {
                 value={props.formData.whatDoYouAlreadyHaveInPlace}
                 onChange={props.handleChange}
                 enhanced={props.enhancedFormData.whatDoYouAlreadyHaveInPlace}
-                fullWidth
                 multiline
                 rows={4}
             />
@@ -63,7 +60,6 @@ const AboutActivity = (props) => {
                             }));
                         }}
                         enhanced={props.enhancedFormData.whatDoYouAimToAchieve?.[index]}
-                        fullWidth
                         key={"whatDoYouAimToAchieve_" + index}
                     />
                 ))}

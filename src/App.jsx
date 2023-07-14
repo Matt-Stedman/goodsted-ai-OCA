@@ -4,6 +4,7 @@ import Form from "./components/Form";
 import { Tabs, Tab } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Button } from "@mui/material";
+import Reviewer from "./components/Reviewer";
 
 const App = () => {
     const [formData, setFormData] = useState({
@@ -86,7 +87,13 @@ const App = () => {
                     />
                 </TabPanel>
                 <TabPanel style={{ padding: 0 }} value="3" index={2}>
-                    Coming soon, wait for my video tomorrow 😉
+                    <Reviewer
+                        opportunityContent={content.opportunityContent}
+                        image={content.image}
+                        linkedInContent={content.linkedInContent}
+                        performAction={performAction}
+                        formData={formData}
+                    />
                 </TabPanel>
             </TabContext>
         </>

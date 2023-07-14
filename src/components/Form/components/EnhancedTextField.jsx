@@ -10,8 +10,8 @@ const EnhancedTextField = (props) => {
                 label={props.label}
                 value={props.value}
                 onChange={props.onChange}
+                fullWidth={true}
                 {...props}
-                fullWidth
             />
             {props.enhanced !== props.value && props.enhanced && (
                 <div

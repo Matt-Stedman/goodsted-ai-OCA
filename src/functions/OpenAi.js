@@ -253,10 +253,12 @@ export async function createLinkedInPostFromForm(raw_form_data) {
     const prompt = `
         I am writing a volunteering opportunity, and now I need you to make me a friendly and exciting LinkedIn post.
         You must:
-        1. Use emojis, because this is a friendly post
+        1. Use some emojis, because this is a friendly post
         2. Keep it succinct (~100 words)! No one wants to read a long LinkedIn post.
         3. Have a call to action, we want people to sign up to this opportunity!
         4. Sound like a friendly human, we're inspiring strangers to join us!
+        5. Use line breaks just to keep it more legible.
+        6. Reference ${form_data.organization} and @Goodsted in the post
 
         Write this LinkedIn post considering the following opportunity notes:
         
