@@ -1,59 +1,78 @@
-import { Button, Grid, Checkbox, FormControlLabel, TextField, Box, MenuItem } from "@mui/material";
-import { useState } from "react";
-const EnhancedTextField = (props) => {
-    const [visible, setVisible] = useState(false);
+import { Box } from "@mui/material";
+import { useEffect, useState } from "react";
+
+const EnhancedImageField = ({ src, selected, onClick, ...props }) => {
+    const [hover, setHover] = useState(false);
+
+    useEffect(() => {
+        if (selected) {
+            console.log("I'm selected");
+        }
+    }, [selected]);
+
     return (
-        <div style={{ width: "100%", position: "relative", display: "inline-block" }}>
-            <TextField
-                margin="normal"
-                name={props.name}
-                label={props.label}
-                value={props.value}
-                onChange={props.onChange}
-                {...props}
-                fullWidth
-            />
-            {props.enhanced !== props.value && props.enhanced && (
+        <Box
+            sx={{
+                position: "relative",
+                width: "100%", // Adjust the width as needed
+                maxHeight: "300px",
+                overflow: "hidden",
+                cursor: "pointer", // Set the cursor to a click icon
+            }}
+            onMouseEnter={() => {
+                setHover(true);
+            }}
+            onMouseLeave={() => {
+                setHover(false);
+            }}
+            onClick={onClick}
+            {...props}
+        >
+            {selected && (
                 <div
                     style={{
                         position: "absolute",
-                        top: "12px",
-                        right: "-2px",
-                        cursor: "pointer",
+                        top: "10px",
+                        right: "10px",
+                        fontSize: "1em",
+                        zIndex: 2,
                     }}
                 >
-                    <span
-                        onMouseEnter={() => setVisible(true)}
-                        onMouseLeave={() => setVisible(false)}
-                        onClick={() => {
-                            props.onChange({
-                                target: { name: props.name, value: props.enhanced ?? "Error occured changing this!" },
-                            });
-                        }}
-                    >
-                        ✨
-                    </span>
-                    <span
-                        style={{
-                            display: visible ? "inline-block" : "none",
-                            position: "absolute",
-                            left: "25px",
-                            top: "-7px",
-                            backgroundColor: "#1976D2",
-                            color: "#ffffff",
-                            padding: "5px",
-                            borderRadius: "5px",
-                            width: "10em",
-                            wordWrap: "break-word",
-                        }}
-                        id="floating-div"
-                    >
-                        {props.enhanced}
-                    </span>
+                    ✅
                 </div>
             )}
-        </div>
+            {hover && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "#fff4", // Overlay background color with transparency
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "5em",
+                        color: "#fff",
+                        zIndex: 1, // Set the z-index to overlay the contents
+                    }}
+                >
+                    ✔
+                </div>
+            )}
+            <img
+                src={src}
+                style={{
+                    width: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    zIndex: 0, // Set the z-index to keep the image below the overlays
+                }}
+                {...props}
+            />
+        </Box>
     );
 };
 
-export default EnhancedTextField;
+export default EnhancedImageField;

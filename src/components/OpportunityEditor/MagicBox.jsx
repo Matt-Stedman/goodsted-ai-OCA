@@ -7,6 +7,7 @@ import {
 } from "../../functions/OpenAi";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
+import MagicButton from "../components/MagicButton";
 
 const MagicBox = (props) => {
     // content
@@ -249,20 +250,13 @@ const MagicBox = (props) => {
             </div>
             {/*Side panel header */}
             {props.blocks?.some((item) => Boolean(item)) && (
-                <button
-                    className="magic-button"
-                    style={{ width: displayFeedback().Any ? "80%" : "100%" }}
-                    onClick={makeGeneralMagic}
+                <MagicButton
+                    text={displayFeedback().Any ? "✨ Try again ✨" : "✨ Let's improve this ✨"}
+                    loading={feedbackLoading}
                     disabled={feedbackLoading}
-                >
-                    {feedbackLoading ? (
-                        <img src={process.env.PUBLIC_URL + "/assets/loading_inline.gif"} width="130" height="17" />
-                    ) : displayFeedback().Any ? (
-                        "✨ Try again ✨"
-                    ) : (
-                        "✨ Let's improve this ✨"
-                    )}
-                </button>
+                    onClick={makeGeneralMagic}
+                    style={{ width: "80%", float: "center" }}
+                />
             )}
             {/* Clear button and error message */}
             {displayFeedback().Any && (
@@ -353,7 +347,10 @@ const MagicBox = (props) => {
                                                         }}
                                                         onClick={() => switchOutTextWrapper(index)}
                                                     >
-                                                        <img src={process.env.PUBLIC_URL + "/assets/switch_icon.png"} height="10px" />
+                                                        <img
+                                                            src={process.env.PUBLIC_URL + "/assets/switch_icon.png"}
+                                                            height="10px"
+                                                        />
                                                     </button>{" "}
                                                     {item.TO}
                                                 </td>

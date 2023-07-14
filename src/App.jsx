@@ -24,9 +24,9 @@ const App = () => {
         user: "",
     });
     const [content, setContent] = useState({
-        image: "",
         opportunityContent: "<em>Start writing!</em>",
-        linkedIn: "",
+        image: "",
+        linkedInContent: "",
     });
 
     const [currentTab, setCurrentTab] = useState("1");
@@ -61,6 +61,14 @@ const App = () => {
                         opportunityContent={content.opportunityContent}
                         setOpportunityContent={(new_opportunityContent) => {
                             setContent({ ...content, opportunityContent: new_opportunityContent });
+                        }}
+                        image={content.image}
+                        setImage={(new_image) => {
+                            setContent({ ...content, image: new_image });
+                        }}
+                        linkedInContent={content.linkedInContent}
+                        setLinkedInContent={(new_linkedInContent) => {
+                            setContent({ ...content, linkedInContent: new_linkedInContent });
                         }}
                         performAction={performAction}
                         formData={formData}
