@@ -175,6 +175,8 @@ export async function fillinTheRestOfForm(raw_form_data) {
 I am writing a volunteering opportunity.
 Given the below form, fill in any and all missing values as best as you can (including any secondary skills and prior experience you feel could be useful), and re-write fields you feel are unclear.
 Be succinct, clear, concise, and human-friendly.
+Note the current date is ${new Date()}.
+
 You must return ONLY a JSON-parsible response!
 {
     "whatDoYouAimToAchieve": LIST [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
@@ -206,14 +208,13 @@ You must return ONLY a JSON-parsible response!
         "Partnerships & Collaboration",
         "Peace & Justice",
         "Poverty Relief"] "${form_data.cause}",
-    "deadline": "${form_data.deadline}",
+    "deadline": FORMAT[yyyy-MM-dd]"${form_data.deadline}",
     "skill": "${form_data.skill}",
     "secondarySkills": LIST [${form_data.secondarySkills.map((skill) => `"${skill}"`).join(", ")}],
     "user": "${form_data.user}",
     "experience": OPTIONS["No experience needed", "Beginner", "Intermediate", "Expert"] "${form_data.experience}"
 }
         `;
-
     /*
         ${
             form_data.organisation
@@ -222,6 +223,102 @@ You must return ONLY a JSON-parsible response!
                 : ""
         }
         */
+    console.log(prompt);
+    const response = await chatGPTClient.post("/", {
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-4",
+    });
+
+    console.log(response);
+    let content = response.data.choices[0].message.content;
+    try {
+        // Find the start and end indices of the JSON-parsable region
+        const startIndex = content.indexOf("{");
+        const endIndex = content.lastIndexOf("}");
+
+        if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+            throw new Error("JSON-parsable region not found");
+        }
+
+        // Extract the JSON-parsable region
+        const jsonContent = content.substring(startIndex, endIndex + 1);
+
+        // Parse the extracted JSON content
+        const formContent = JSON.parse(jsonContent);
+
+        // Perform any additional processing or logic here
+
+        // Return the extracted fields or perform any other desired operations
+        return {
+            whatDoYouAimToAchieve: formContent.whatDoYouAimToAchieve,
+            whatDoYouNeedHelpWith: formContent.whatDoYouNeedHelpWith,
+            whatDoYouAlreadyHaveInPlace: formContent.whatDoYouAlreadyHaveInPlace,
+            location: formContent.location,
+            title: formContent.title,
+            cause: formContent.cause,
+            deadline: formContent.deadline,
+            skill: formContent.skill,
+            secondarySkills: formContent.secondarySkills,
+            user: formContent.user,
+            experience: formContent.experience,
+            opportunityType: formContent.opportunityType,
+        };
+    } catch (error) {
+        console.error("Error parsing form content:", error);
+        return null;
+    }
+}
+
+/**
+ * Function to create a posting given a form response
+ */
+export async function autoPopulateForm(inYourOwnWords) {
+    const prompt = `
+I am writing a volunteering opportunity.
+Given the below summary fill in all the values of the below form as best as you can (including any secondary skills and prior experience you feel could be useful).
+Be succinct, clear, concise, and human-friendly.
+Note the current date is ${new Date()}.
+
+SUMMARY:
+${inYourOwnWords}
+FORM FOR YOU TO RESPOND:
+You must return ONLY a JSON-parsible response!
+{
+    "whatDoYouAimToAchieve": LIST ["..."],
+    "whatDoYouNeedHelpWith": "...",
+    "whatDoYouAlreadyHaveInPlace": "...",
+    "location": "...",
+    "title": "...",
+    "opportunityType": OPTIONS["Mentoring", "Task", "Brainstorming", "Activity"] "..."
+    "cause": OPTIONS[
+        "Animal Welfare",
+        "Arts & Culture",
+        "Black Lives Matter",
+        "Children & Youth",
+        "Clean water & Sanitation",
+        "Community Engagement",
+        "COVID-19",
+        "Education & Training",
+        "Employment & Economic Growth",
+        "Environment & Sustainability",
+        "Equality & Inclusion",
+        "Financial Inclusion",
+        "Food & Agriculture",
+        "Health & Wellbeing",
+        "Homelessness & Housing",
+        "Innovation & Infrastructure",
+        "Later Life & Elderly",
+        "Mental Wellness & Resilience",
+        "Migration & Refugees",
+        "Partnerships & Collaboration",
+        "Peace & Justice",
+        "Poverty Relief"] "...",
+    "deadline": FORMAT[yyyy-MM-dd] "...",
+    "skill": "...",
+    "secondarySkills": LIST ["..."],
+    "experience": OPTIONS["No experience needed", "Beginner", "Intermediate", "Expert"] "..."
+}
+        `;
     console.log(prompt);
     const response = await chatGPTClient.post("/", {
         messages: [{ role: "user", content: prompt }],

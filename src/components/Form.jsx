@@ -189,7 +189,13 @@ const Form = (props) => {
                     />
                 </TabPanel>
             </TabContext>
-            <StartPopup formData={props.formData} showPopup={!props.formData?.title && !props.formData?.cause} />
+            <StartPopup
+                formData={props.formData}
+                showPopup={!props.formData?.title && !props.formData?.cause}
+                setFormData={props.setFormData}
+                enhancementLoading={enhancementLoading}
+                setEnhancementLoading={setEnhancementLoading}
+            />
         </div>
     );
 };

@@ -14,7 +14,7 @@ const AboutActivity = (props) => {
             <TextField
                 name="organisation"
                 label="What organisation is leading this opportunity?"
-                value={props.formData.organisation}
+                value={props.formData.organisation ?? ""}
                 onChange={props.handleChange}
                 fullWidth={true}
                 select
