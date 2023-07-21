@@ -10,14 +10,13 @@ const AboutActivity = (props) => {
                 value={props.formData.title}
                 enhanced={props.enhancedFormData.title}
                 onChange={props.handleChange}
-                fullWidth
             />
             <TextField
                 name="organisation"
                 label="What organisation is leading this opportunity?"
                 value={props.formData.organisation}
                 onChange={props.handleChange}
-                fullWidth
+                fullWidth={true}
                 select
                 margin="normal"
             >
@@ -33,7 +32,6 @@ const AboutActivity = (props) => {
                 value={props.formData.whatDoYouNeedHelpWith}
                 onChange={props.handleChange}
                 enhanced={props.enhancedFormData.whatDoYouNeedHelpWith}
-                fullWidth
                 multiline
                 rows={4}
             />
@@ -43,7 +41,6 @@ const AboutActivity = (props) => {
                 value={props.formData.whatDoYouAlreadyHaveInPlace}
                 onChange={props.handleChange}
                 enhanced={props.enhancedFormData.whatDoYouAlreadyHaveInPlace}
-                fullWidth
                 multiline
                 rows={4}
             />
@@ -63,7 +60,6 @@ const AboutActivity = (props) => {
                             }));
                         }}
                         enhanced={props.enhancedFormData.whatDoYouAimToAchieve?.[index]}
-                        fullWidth
                         key={"whatDoYouAimToAchieve_" + index}
                     />
                 ))}
@@ -78,6 +74,29 @@ const AboutActivity = (props) => {
                 >
                     Add a goal
                 </Button>
+                <Button
+                    onClick={() => {
+                        props.setFormData((prevData) => {
+                            const updatedGoals = [...prevData.whatDoYouAimToAchieve];
+                            updatedGoals.pop(); // Remove the last item from the array
+                            return {
+                                ...prevData,
+                                whatDoYouAimToAchieve: updatedGoals,
+                            };
+                        });
+                    }}
+                    style={{ fontSize: "0.7em" }}
+                >
+                    Remove last goal
+                </Button>
+
+                {props.formData.whatDoYouAimToAchieve.length < props.enhancedFormData.whatDoYouAimToAchieve.length && (
+                    <div style={{ marginLeft: "2em" }}>
+                        <em style={{ fontSize: ".8em", color: "#888" }}>
+                            There are more goals the AI generator could add!
+                        </em>
+                    </div>
+                )}
             </div>
             {props.childElements}
         </Box>

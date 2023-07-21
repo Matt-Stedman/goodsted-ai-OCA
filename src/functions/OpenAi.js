@@ -177,17 +177,40 @@ Given the below form, fill in any and all missing values as best as you can (inc
 Be succinct, clear, concise, and human-friendly.
 You must return ONLY a JSON-parsible response!
 {
-    "whatDoYouAimToAchieve":  [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
+    "whatDoYouAimToAchieve": LIST [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
     "whatDoYouNeedHelpWith": "${form_data.whatDoYouNeedHelpWith}",
     "whatDoYouAlreadyHaveInPlace": "${form_data.whatDoYouAlreadyHaveInPlace}",
     "location": "${form_data.location}",
     "title": "${form_data.title}",
-    "cause": "${form_data.cause}",
+    "opportunityType": OPTIONS["Mentoring", "Task", "Brainstorming", "Activity"] "${form_data.opportunityType}"
+    "cause": OPTIONS[
+        "Animal Welfare",
+        "Arts & Culture",
+        "Black Lives Matter",
+        "Children & Youth",
+        "Clean water & Sanitation",
+        "Community Engagement",
+        "COVID-19",
+        "Education & Training",
+        "Employment & Economic Growth",
+        "Environment & Sustainability",
+        "Equality & Inclusion",
+        "Financial Inclusion",
+        "Food & Agriculture",
+        "Health & Wellbeing",
+        "Homelessness & Housing",
+        "Innovation & Infrastructure",
+        "Later Life & Elderly",
+        "Mental Wellness & Resilience",
+        "Migration & Refugees",
+        "Partnerships & Collaboration",
+        "Peace & Justice",
+        "Poverty Relief"] "${form_data.cause}",
     "deadline": "${form_data.deadline}",
     "skill": "${form_data.skill}",
-    "secondarySkills": [${form_data.secondarySkills.map((skill) => `"${skill}"`).join(", ")}],
+    "secondarySkills": LIST [${form_data.secondarySkills.map((skill) => `"${skill}"`).join(", ")}],
     "user": "${form_data.user}",
-    "experience": "${form_data.experience}"
+    "experience": OPTIONS["No experience needed", "Beginner", "Intermediate", "Expert"] "${form_data.experience}"
 }
         `;
 
@@ -237,6 +260,7 @@ You must return ONLY a JSON-parsible response!
             secondarySkills: formContent.secondarySkills,
             user: formContent.user,
             experience: formContent.experience,
+            opportunityType: formContent.opportunityType,
         };
     } catch (error) {
         console.error("Error parsing form content:", error);
@@ -253,10 +277,12 @@ export async function createLinkedInPostFromForm(raw_form_data) {
     const prompt = `
         I am writing a volunteering opportunity, and now I need you to make me a friendly and exciting LinkedIn post.
         You must:
-        1. Use emojis, because this is a friendly post
+        1. Use some emojis, because this is a friendly post
         2. Keep it succinct (~100 words)! No one wants to read a long LinkedIn post.
         3. Have a call to action, we want people to sign up to this opportunity!
         4. Sound like a friendly human, we're inspiring strangers to join us!
+        5. Use line breaks just to keep it more legible.
+        6. Reference ${form_data.organization} and @Goodsted in the post
 
         Write this LinkedIn post considering the following opportunity notes:
         

@@ -3,13 +3,6 @@ import { useEffect, useState } from "react";
 
 const EnhancedImageField = ({ src, selected, onClick, ...props }) => {
     const [hover, setHover] = useState(false);
-
-    useEffect(() => {
-        if (selected) {
-            console.log("I'm selected");
-        }
-    }, [selected]);
-
     return (
         <Box
             sx={{
