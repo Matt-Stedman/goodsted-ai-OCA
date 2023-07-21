@@ -29,13 +29,12 @@ const causeOptions = [
 const WhatDoYouNeedHelpWith = (props) => {
     return (
         <Box sx={{ width: "50%", flexDirection: "column" }}>
-            <TextField
-                name="opportunity_type"
+            <EnhancedTextField
+                name="opportunityType"
                 label="What do you need help with?"
                 select
-                fullWidth={true}
-                value={props.formData.opportunity_type}
-                margin="normal"
+                value={props.formData.opportunityType}
+                enhanced={props.enhancedFormData.opportunityType}
                 onChange={props.handleChange}
             >
                 {["Mentoring", "Task", "Brainstorming", "Activity"].map((cause) => (
@@ -43,14 +42,13 @@ const WhatDoYouNeedHelpWith = (props) => {
                         {cause}
                     </MenuItem>
                 ))}
-            </TextField>
-            <TextField
+            </EnhancedTextField>
+            <EnhancedTextField
                 name="cause"
                 label="What cause is this evolving?"
                 select
-                fullWidth={true} 
-                margin="normal"
                 value={props.formData.cause}
+                enhanced={props.enhancedFormData.cause}
                 onChange={props.handleChange}
             >
                 {causeOptions.map((cause) => (
@@ -58,7 +56,7 @@ const WhatDoYouNeedHelpWith = (props) => {
                         {cause}
                     </MenuItem>
                 ))}
-            </TextField>
+            </EnhancedTextField>
             {props.childElements}
         </Box>
     );

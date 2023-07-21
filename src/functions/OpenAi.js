@@ -177,17 +177,40 @@ Given the below form, fill in any and all missing values as best as you can (inc
 Be succinct, clear, concise, and human-friendly.
 You must return ONLY a JSON-parsible response!
 {
-    "whatDoYouAimToAchieve":  [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
+    "whatDoYouAimToAchieve": LIST [${form_data.whatDoYouAimToAchieve.map((skill) => `"${skill}"`).join(", ")}],
     "whatDoYouNeedHelpWith": "${form_data.whatDoYouNeedHelpWith}",
     "whatDoYouAlreadyHaveInPlace": "${form_data.whatDoYouAlreadyHaveInPlace}",
     "location": "${form_data.location}",
     "title": "${form_data.title}",
-    "cause": "${form_data.cause}",
+    "opportunityType": OPTIONS["Mentoring", "Task", "Brainstorming", "Activity"] "${form_data.opportunityType}"
+    "cause": OPTIONS[
+        "Animal Welfare",
+        "Arts & Culture",
+        "Black Lives Matter",
+        "Children & Youth",
+        "Clean water & Sanitation",
+        "Community Engagement",
+        "COVID-19",
+        "Education & Training",
+        "Employment & Economic Growth",
+        "Environment & Sustainability",
+        "Equality & Inclusion",
+        "Financial Inclusion",
+        "Food & Agriculture",
+        "Health & Wellbeing",
+        "Homelessness & Housing",
+        "Innovation & Infrastructure",
+        "Later Life & Elderly",
+        "Mental Wellness & Resilience",
+        "Migration & Refugees",
+        "Partnerships & Collaboration",
+        "Peace & Justice",
+        "Poverty Relief"] "${form_data.cause}",
     "deadline": "${form_data.deadline}",
     "skill": "${form_data.skill}",
-    "secondarySkills": [${form_data.secondarySkills.map((skill) => `"${skill}"`).join(", ")}],
+    "secondarySkills": LIST [${form_data.secondarySkills.map((skill) => `"${skill}"`).join(", ")}],
     "user": "${form_data.user}",
-    "experience": "${form_data.experience}"
+    "experience": OPTIONS["No experience needed", "Beginner", "Intermediate", "Expert"] "${form_data.experience}"
 }
         `;
 
@@ -237,6 +260,7 @@ You must return ONLY a JSON-parsible response!
             secondarySkills: formContent.secondarySkills,
             user: formContent.user,
             experience: formContent.experience,
+            opportunityType: formContent.opportunityType,
         };
     } catch (error) {
         console.error("Error parsing form content:", error);

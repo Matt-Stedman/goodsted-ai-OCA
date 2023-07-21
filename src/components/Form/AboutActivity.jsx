@@ -74,6 +74,29 @@ const AboutActivity = (props) => {
                 >
                     Add a goal
                 </Button>
+                <Button
+                    onClick={() => {
+                        props.setFormData((prevData) => {
+                            const updatedGoals = [...prevData.whatDoYouAimToAchieve];
+                            updatedGoals.pop(); // Remove the last item from the array
+                            return {
+                                ...prevData,
+                                whatDoYouAimToAchieve: updatedGoals,
+                            };
+                        });
+                    }}
+                    style={{ fontSize: "0.7em" }}
+                >
+                    Remove last goal
+                </Button>
+
+                {props.formData.whatDoYouAimToAchieve.length < props.enhancedFormData.whatDoYouAimToAchieve.length && (
+                    <div style={{ marginLeft: "2em" }}>
+                        <em style={{ fontSize: ".8em", color: "#888" }}>
+                            There are more goals the AI generator could add!
+                        </em>
+                    </div>
+                )}
             </div>
             {props.childElements}
         </Box>

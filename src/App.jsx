@@ -8,7 +8,7 @@ import Reviewer from "./components/Reviewer";
 
 const App = () => {
     const [formData, setFormData] = useState({
-        opportunity_type: "",
+        opportunityType: "",
         title: "",
         organisation: "",
         whatDoYouNeedHelpWith: "",
