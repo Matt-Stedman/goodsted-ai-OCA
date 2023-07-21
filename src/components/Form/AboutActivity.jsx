@@ -14,7 +14,7 @@ const AboutActivity = (props) => {
             <TextField
                 name="organisation"
                 label="What organisation is leading this opportunity?"
-                value={props.formData.organisation}
+                value={props.formData.organisation ?? ""}
                 onChange={props.handleChange}
                 fullWidth={true}
                 select
@@ -90,7 +90,8 @@ const AboutActivity = (props) => {
                     Remove last goal
                 </Button>
 
-                {props.formData.whatDoYouAimToAchieve.length < props.enhancedFormData.whatDoYouAimToAchieve.length && (
+
+                {props.formData.whatDoYouAimToAchieve?.length < props.enhancedFormData.whatDoYouAimToAchieve?.length && (
                     <div style={{ marginLeft: "2em" }}>
                         <em style={{ fontSize: ".8em", color: "#888" }}>
                             There are more goals the AI generator could add!

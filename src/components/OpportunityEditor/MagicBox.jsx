@@ -26,13 +26,6 @@ const MagicBox = (props) => {
     // panes
     const [paneSizes, setPaneSizes] = useState(["80%", "20%"]);
 
-    // const makeMagic = () => {
-    //     const blocksAndSelection = props.returnBlockAndSelection();
-    //     setPreSwitchContent(blocksAndSelection.selectedText);
-    //     // setPostSwitchContent(
-    //     console.log(reviewEntireOpportunityGenerally(blocksAndSelection.content));
-    // };
-
     /**
      * Parse the checklist feedback from the text response
      */
@@ -213,41 +206,6 @@ const MagicBox = (props) => {
                 textAlign: "center",
             }}
         >
-            {/* Floating magic button area */}
-            <div
-                // TODO we need to put back in the magic button when we're ready!
-                // className={`magic magic-box${props.showMagicBox ? ""/ : " hidden"}`}
-                style={{
-                    top: props.magicBoxPosition.y,
-                    left: props.magicBoxPosition.x,
-                    display: "none",
-                }}
-            >
-                <div className="grid-container">
-                    {preSwitchContent && (
-                        <div className="grid-item left">
-                            <h2 className="title">Switch</h2>
-                            {preSwitchContent}
-                        </div>
-                    )}
-                    {postSwitchContent && (
-                        <div className="grid-item right top">
-                            <h2 className="title">with</h2>
-                            {postSwitchContent}
-                        </div>
-                    )}
-                    {reasonContent && (
-                        <div className="grid-item right bottom">
-                            <h2 className="title">because</h2>
-                            {reasonContent}
-                        </div>
-                    )}
-                </div>
-
-                {!postSwitchContent && (
-                    <button className={`magic-button`}>{/* onClick={makeMagic}> */}✨ Magic me! ✨</button>
-                )}
-            </div>
             {/*Side panel header */}
             {props.blocks?.some((item) => Boolean(item)) && (
                 <MagicButton
