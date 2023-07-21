@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/goodsted-ai-OCA/static/css/main.b69c40c3.css",
-    "main.js": "/goodsted-ai-OCA/static/js/main.537e301c.js",
+    "main.css": "/goodsted-ai-OCA/static/css/main.37f04689.css",
+    "main.js": "/goodsted-ai-OCA/static/js/main.87587178.js",
     "static/js/787.ece6d1b5.chunk.js": "/goodsted-ai-OCA/static/js/787.ece6d1b5.chunk.js",
     "index.html": "/goodsted-ai-OCA/index.html",
-    "main.b69c40c3.css.map": "/goodsted-ai-OCA/static/css/main.b69c40c3.css.map",
-    "main.537e301c.js.map": "/goodsted-ai-OCA/static/js/main.537e301c.js.map",
+    "main.37f04689.css.map": "/goodsted-ai-OCA/static/css/main.37f04689.css.map",
+    "main.87587178.js.map": "/goodsted-ai-OCA/static/js/main.87587178.js.map",
     "787.ece6d1b5.chunk.js.map": "/goodsted-ai-OCA/static/js/787.ece6d1b5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b69c40c3.css",
-    "static/js/main.537e301c.js"
+    "static/css/main.37f04689.css",
+    "static/js/main.87587178.js"
   ]
 }
