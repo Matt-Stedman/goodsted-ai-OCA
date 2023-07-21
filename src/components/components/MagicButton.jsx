@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Button, Box } from "@mui/material";
 
-const MagicButton = ({ loading, text, onClick, ...props }) => {
+const MagicButton = ({ loading, text, onClick, style, ...props }) => {
     const buttonRef = useRef(null);
 
     useEffect(() => {
@@ -13,10 +13,9 @@ const MagicButton = ({ loading, text, onClick, ...props }) => {
             buttonElement.style.height = `${buttonRect.height}px`;
         }
     }, []);
-
     return (
         <>
-            <Box ref={buttonRef} sx={{ position: "relative", display: "inline-block" }} {...props}>
+            <Box ref={buttonRef} sx={{ position: "relative", display: "inline-block" }} style={style}>
                 {loading ? (
                     <img
                         src={process.env.PUBLIC_URL + "/assets/loading_inline.gif"}
@@ -24,7 +23,7 @@ const MagicButton = ({ loading, text, onClick, ...props }) => {
                         style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                     />
                 ) : (
-                    <Button onClick={onClick} {...props}>
+                    <Button onClick={onClick} style={style}>
                         {text}
                     </Button>
                 )}

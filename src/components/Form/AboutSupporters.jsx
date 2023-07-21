@@ -57,7 +57,7 @@ const AboutSupporters = (props) => {
                     Remove last skill
                 </Button>
 
-                {props.formData.secondarySkills.length < props.enhancedFormData.secondarySkills.length && (
+                {props.formData.secondarySkills?.length < props.enhancedFormData.secondarySkills?.length && (
                     <div style={{marginLeft: "2em"}}>
                         <em style={{fontSize: ".8em", color: "#888"}}>There are more skills the AI generator could add!</em>
                     </div>

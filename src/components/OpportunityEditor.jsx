@@ -12,7 +12,6 @@ const OpportunityEditor = (props) => {
 
     // positioning
     const [showMagicBox, setShowMagicBox] = useState(false);
-    const [magicBoxPosition, setMagicBoxPosition] = useState({ x: 0, y: 0 });
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [windowHeight, setWindowHeight] = useState(860);
 
@@ -144,20 +143,6 @@ const OpportunityEditor = (props) => {
     };
 
     /**
-     * Decide if we should show the button based on whether there is a selection of text or not.
-     */
-    const triggerButton = () => {
-        const selection = unprivilegedEditorRef.current.getSelection();
-        setShowMagicBox(false);
-        if (selection) {
-            if (selection.length) {
-                setShowMagicBox(true);
-                setMagicBoxPosition({ x: mousePosition.x, y: mousePosition.y });
-            }
-        }
-    };
-
-    /**
      * Track the mouse movement ready for when we make a selection
      */
     const handleMouseMove = (event) => {
@@ -200,7 +185,7 @@ const OpportunityEditor = (props) => {
                         ref={quillRef}
                         // value={quillValue} // Need some to capture the contents from previous, or start with a proposed layout
                         onChange={handleChange}
-                        onChangeSelection={triggerButton}
+                        // onChangeSelection={triggerButton}
                         theme="snow"
                         style={{ height: windowHeight - 50 }}
                         defaultValue={props.opportunityContent}
@@ -216,8 +201,6 @@ const OpportunityEditor = (props) => {
                         addSectionToContent={addSectionToContent}
                         switchOutText={switchOutText}
                         // Handle magic box
-                        showMagicBox={showMagicBox}
-                        magicBoxPosition={magicBoxPosition}
                         // Handle custom styling
                         style={{ height: windowHeight - 52, borderBottom: "#bbb 1px solid", overflow: "auto" }}
                     />

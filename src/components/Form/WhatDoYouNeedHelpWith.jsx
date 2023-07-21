@@ -1,5 +1,6 @@
 import { Button, TextField, Box, MenuItem } from "@mui/material";
 import EnhancedTextField from "./components/EnhancedTextField";
+import MagicButton from "../components/MagicButton";
 
 const causeOptions = [
     "Animal Welfare",
@@ -31,7 +32,7 @@ const WhatDoYouNeedHelpWith = (props) => {
         <Box sx={{ width: "50%", flexDirection: "column" }}>
             <EnhancedTextField
                 name="opportunityType"
-                label="What do you need help with?"
+                label="What type of opportunity is this?"
                 select
                 value={props.formData.opportunityType}
                 enhanced={props.enhancedFormData.opportunityType}

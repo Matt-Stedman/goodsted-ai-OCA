@@ -11,6 +11,7 @@ const App = () => {
         opportunityType: "",
         title: "",
         organisation: "",
+        inYourOwnWords: "",
         whatDoYouNeedHelpWith: "",
         whatDoYouAlreadyHaveInPlace: "",
         whatDoYouAimToAchieve: [""],
